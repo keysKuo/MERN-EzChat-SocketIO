@@ -1,68 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --light-lavender: #F2EFF2, 
+  --light-grey: #F5F6F6;
+  --light-purple: #E0DAE4,
+  --extralight-grey: #F8F9FA
+  --light-cyan: #F3FAF4,
+  --white: #FFFFFF
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+
+
+.shadow-messagebox {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+.shadow-btn {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.shadow-heading {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.bg-lavender {
+  background-color: var(--light-lavender);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.bg-grey {
+  background-color: var(--light-grey);
+}
+
+.bg-purple {
+  background-color: var(--light-purple);
+}
+
+.bg-lightgrey {
+  background-color: var(--extralight-grey);
+}
+
+.bg-cyan {
+  background-color: var(--light-cyan);
+}
+
+.message-right {
+  align-self: end;
+}
+
+.message-right > .message {
+  background-color: #ccc;
+}
+
+.message-right > .time {
+  align-self: end;
+}
+
+.message-left {
+  align-self: start;
+}
+
+.message-left > .message {
+  background-color: #E8ECEF;
+}
+
+.message-left > .time {
+  align-self: start;
+}
+
+.chatbox-content {
+  -ms-overflow-style: none; 
+    /* scrollbar-width: none;  */
+    /* scroll-behavior: smooth; */
+    scroll-snap-type: y mandatory;
 }
