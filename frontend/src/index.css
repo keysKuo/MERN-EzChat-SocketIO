@@ -67,6 +67,7 @@
 
 .message-left > .time {
   align-self: start;
+  padding-left: 10px;
 }
 
 .chatbox-content {
