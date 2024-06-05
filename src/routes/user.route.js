@@ -1,0 +1,11 @@
+const express = require('express');
+const catchAsync = require('../helpers/async.catch');
+const { verifyAuth } = require('../middlewares/auth.verify');
+const UserController = require('../controllers/user.controller');
+const router = express.Router();
+
+router.use(catchAsync(verifyAuth));
+
+router.get("/list", catchAsync(UserController.getOtherUsers));
+
+module.exports = router;
