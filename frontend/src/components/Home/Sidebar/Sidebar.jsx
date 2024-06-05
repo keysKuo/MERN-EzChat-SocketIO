@@ -34,7 +34,7 @@ export default function Sidebar({ conversations, selectedIndex, setSelectedIndex
 			<div className="flex flex-col item-center justify-between w-full gap-3">
 				<span className="text-[1rem] px-4">ALL CHATS</span>
 
-				<div className="chat-list flex flex-col items-start justify-center w-full gap-2">
+				<div className="chat-list flex flex-col items-start justify-center w-full gap-2 overflow-y-scroll">
 					{conversations?.map((conv, idx) => {
 						return (
 							<ChatInfo

@@ -6,8 +6,8 @@ class AuthController {
 	 * @url     /api/v1/auth/signUp
 	 * @method  POST
 	 * @desc    signUp a new account
-	 * @param   {String} fullname
 	 * @param   {String} username
+	 * @param   {String} email
 	 * @param   {String} password
 	 * @param   {String} gender
 	 * @return  {JSON} user, accessToken, refreshToken
@@ -35,7 +35,7 @@ class AuthController {
 	 * @url     /api/v1/auth/signIn
 	 * @method  POST
 	 * @desc    login to account
-	 * @param   {String} username
+	 * @param   {String} email
 	 * @param   {String} password
 	 * @return  {JSON} user, accessToken, refreshToken
 	 */

@@ -14,11 +14,13 @@ const KeyStoreService = require("./keystore.services");
 class AuthService {
 	static async refreshToken() {}
 
-	static async signIn({ username, password }) {
-		const existedUser = await userModel.findOne({ username }).lean();
+	static async signIn({ email, password }) {
+		const existedUser = await userModel.findOne({ email }).lean();
 		if (!existedUser)
 			throw new FileNotFoundError(`❌ Error: User Not Exists!`);
-		if (!bcrypt.compare(password, existedUser.password))
+        
+        const passwordMatched = await bcrypt.compare(password, existedUser.password);
+		if (!passwordMatched)
 			throw new AuthorizedError(`❌ Error: Authentication Error!`);
 
 		// Generate new Keys
@@ -46,7 +48,7 @@ class AuthService {
         return {
             user: filterData({
 				object: existedUser,
-				fields: ["_id", "fullname", "username", "gender", "avatar"],
+				fields: ["_id", "username", "email", "gender", "avatar"],
 			}),
 			accessToken,
 			refreshToken,
@@ -63,9 +65,9 @@ class AuthService {
 		return delkey;
     }
 
-	static async signUp({ fullname, username, password, gender }) {
+	static async signUp({ username, email, password, gender }) {
 		// Check existed User
-		const existedUser = await userModel.countDocuments({ username });
+		const existedUser = await userModel.countDocuments({ email });
 		if (existedUser != 0)
 			throw new BadRequestError(`❌ Error: User already existed!`);
 
@@ -74,8 +76,8 @@ class AuthService {
 		const femaleAvatar = `female-avatar.png`;
 		const passwordHash = await bcrypt.hash(password, 10);
 		const newUser = await userModel.create({
-			fullname,
 			username,
+			email,
 			password: passwordHash,
 			gender,
 			avatar: gender === "male" ? maleAvatar : femaleAvatar,
@@ -99,7 +101,7 @@ class AuthService {
 		return {
 			user: filterData({
 				object: newUser,
-				fields: ["_id", "fullname", "username", "gender", "avatar"],
+				fields: ["_id", "username", "email", "gender", "avatar"],
 			}),
 			accessToken,
 			refreshToken,

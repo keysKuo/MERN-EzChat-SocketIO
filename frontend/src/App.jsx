@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ClientRoot } from "./layouts";
 import { HomePage, SignInPage, SignUpPage } from "./pages";
+import AuthProvider from "./contexts/AuthProvider";
 
 const router = createBrowserRouter([
 	{
@@ -17,7 +18,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-	return <RouterProvider router={router} />;
+	return (
+		<AuthProvider>
+			<RouterProvider router={router} />
+		</AuthProvider>
+	);
 }
 
 export default App;

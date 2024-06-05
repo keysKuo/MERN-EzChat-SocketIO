@@ -76,3 +76,8 @@
     /* scroll-behavior: smooth; */
     scroll-snap-type: y mandatory;
 }
+
+.chat-list {
+  -ms-overflow-style: none; 
+    scrollbar-width: none; 
+}

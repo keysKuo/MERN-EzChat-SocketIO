@@ -65,7 +65,7 @@ export default function MessageBox({ conversation }) {
 			>
 				<div className="w-full flex flex-col items-start justify-between">
 					{conversation?.messages.map((chat, idx) => {
-						const nextChat = conversation[idx + 1];
+						const nextChat = conversation?.messages[idx + 1];
 						const isHiddenTime =
 							!(nextChat?.userId !== chat?.userId) &&
 							new Date(nextChat?.createdAt).getTime() -

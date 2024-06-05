@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import MessageBox from "../components/Home/MessageBox/MessageBox";
 import Sidebar from "../components/Home/Sidebar/Sidebar";
 import ContactInfo from "../components/Home/ContactInfo/ContactInfo";
+import { AuthContext } from "../contexts/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 let fakeChat_1 = [
 	{
@@ -70,7 +72,16 @@ let fakeConversations = [
 ];
 
 export default function HomePage() {
+	const { user, setUser } = useContext(AuthContext);
 	const [selectedIndex, setSelectedIndex] = useState(0);
+    const navigate = useNavigate();
+    // localStorage.clear();
+
+    useEffect(() => {
+		if (!user) {
+			navigate("/login");
+		}
+	}, [user]);
 
 	return (
 		<>
@@ -96,8 +107,10 @@ export default function HomePage() {
 
 				{/* USER CONTACT INFORMATION */}
 				<div className="w-[20%] min-h-[60dvh] max-h-[60dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
-                    <ContactInfo conversation={fakeConversations[selectedIndex]} />
-                </div>
+					<ContactInfo
+						conversation={fakeConversations[selectedIndex]}
+					/>
+				</div>
 			</div>
 		</>
 	);
