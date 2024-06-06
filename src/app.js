@@ -36,6 +36,11 @@ checkOverload();
 
 app.use("/api/v1", require("./routes"));
 
+app.get('/static/:resource', (req, res, next) => {
+	const { resource } = req.params;
+	res.sendFile(`./public/${resource}`);
+})
+
 // init routers
 app.get("/", (req, res, next) => {
 	return res.status(200).json({
