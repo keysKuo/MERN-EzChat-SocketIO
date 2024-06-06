@@ -35,16 +35,14 @@ export default function LoginPage() {
 					"Content-Type": "application/json",
 				},
 				data: formData,
+				withCredentials: true,
 			};
 
 			await axios.request(options).then((response) => {
 				const result = response.data;
 
 				if (result.success) {
-					setUser(result.metadata.user);
-					localStorage.setItem("user", JSON.stringify(result.metadata.user));
-					localStorage.setItem("refreshToken", result.metadata.refreshToken);
-					localStorage.setItem("accessToken", result.metadata.accessToken);
+					storeUser(result);
 					navigate("/");
 				}
 			}).catch(err => {
@@ -53,6 +51,13 @@ export default function LoginPage() {
 		};
 
 		Login();
+	};
+
+	const storeUser = (result) => {
+		setUser(result.metadata.user);
+		localStorage.setItem("user", JSON.stringify(result.metadata.user));
+		localStorage.setItem("refreshToken", result.metadata.refreshToken);
+		localStorage.setItem("accessToken", result.metadata.accessToken);
 	};
 
 	return (
@@ -91,20 +96,20 @@ export default function LoginPage() {
 			<button
 				onClick={onSubmit}
 				className="w-[40%] h-10 rounded-badge text-center mt-3
-        	bg-[#71b190] border-2 border-[#71b190] flex items-center justify-center"
+        	bg-zinc-600 hover:bg-[#71b190] flex items-center justify-center"
 			>
 				<span className="text-white text-base">Login</span>
 			</button>
 
 			<div className="divider text-xs my-1">OR</div>
 
-			<Link className="text-xs text-zinc-800 hover:text-[#71b190]">
+			<Link to={"/register"} className="text-xs text-zinc-800 hover:text-[#71b190]">
 				Your don't have any account?
 			</Link>
 
 			<button
-				className="google-login-btn w-[90%] h-10 rounded-badge text-sm 
-        bg-[#3273FF] border-2 border-[#3273FF] flex items-center justify-start gap-16"
+				className="google-login-btn w-[90%] h-10 rounded-badge text-sm mb-3
+        		bg-[#3273FF] border-2 border-[#3273FF] flex items-center justify-start gap-16"
 			>
 				<div className="w-[2.2rem] h-[2.2rem] rounded-full bg-white flex items-center justify-center">
 					<GoogleSVG />

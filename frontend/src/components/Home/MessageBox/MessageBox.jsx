@@ -28,7 +28,7 @@ export default function MessageBox({ conversation }) {
 			{/* HEADER */}
 			<div className="chatbox-header w-full flex items-center justify-between bg-[#F5F6F6] px-4 py-2 mb-5">
 				<div className="flex items-center justify-center gap-2">
-					<div className="avatar online">
+					<div className={`avatar ${conversation?.partner?.status}`}>
 						<div className="w-12 rounded-full">
 							<img
 								src={

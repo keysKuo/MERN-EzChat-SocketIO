@@ -65,15 +65,18 @@ class AuthService {
 		return delkey;
     }
 
-	static async signUp({ username, email, password, gender }) {
+	static async signUp({ username, email, password, confirmPassword, gender }) {
 		// Check existed User
 		const existedUser = await userModel.countDocuments({ email });
 		if (existedUser != 0)
 			throw new BadRequestError(`❌ Error: User already existed!`);
 
+		if (password !== confirmPassword) 
+			throw new BadRequestError(`❌ Password and Confirm Password must be same`);
+
 		// Insert User to DB
-		const maleAvatar = `male-avatar.png`;
-		const femaleAvatar = `female-avatar.png`;
+		const maleAvatar = `${process.env.BACKEND_URL}/male-avatar.png`;
+		const femaleAvatar = `${process.env.BACKEND_URL}/female-avatar.png`;
 		const passwordHash = await bcrypt.hash(password, 10);
 		const newUser = await userModel.create({
 			username,

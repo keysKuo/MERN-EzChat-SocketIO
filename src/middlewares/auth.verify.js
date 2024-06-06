@@ -22,6 +22,7 @@ module.exports.verifyAuth = async (req, res, next) => {
 		next();
 	} else {
 		const accessToken = req.cookies["accessToken"]?.toString();
+		console.log(accessToken);
 		if (!accessToken) throw new AuthorizedError("❌ No Token Provided");
 
 		const decode = await verifyTokens(accessToken, keyStore.publicKey);

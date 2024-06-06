@@ -74,7 +74,7 @@ export default function ContactInfo({ conversation }) {
 					<input
 						type="checkbox"
 						className="toggle toggle-sm toggle-success"
-						checked
+						defaultChecked
 					/>
 				</div>
 
