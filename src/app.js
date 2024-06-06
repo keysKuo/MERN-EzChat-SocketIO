@@ -38,7 +38,7 @@ app.use("/api/v1", require("./routes"));
 
 app.get('/static/:resource', (req, res, next) => {
 	const { resource } = req.params;
-	res.sendFile(path.join(__dirname), `public`, resource);
+	res.sendFile(path.join(__dirname, `public`, resource));
 })
 
 // init routers
