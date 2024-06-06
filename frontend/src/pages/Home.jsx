@@ -74,11 +74,11 @@ let fakeConversations = [
 ];
 
 export default function HomePage() {
-	const [selectedIndex, setSelectedIndex] = useState(0);
-    // localStorage.clear();
-	const {user , setUser} = useAuthContext();
+	const [selectedIndex, setSelectedIndex] = useState(null);
+	// localStorage.clear();
+	const { user, setUser } = useAuthContext();
 	const { fetch, loading, error } = useAPI();
-	const [ conversations, setConversations] = useState([]);
+	const [conversations, setConversations] = useState([]);
 
 	useEffect(() => {
 		const LoadConversations = async () => {
@@ -93,14 +93,14 @@ export default function HomePage() {
 			};
 
 			const result = await fetch(options);
-			if(result) {
+			if (result) {
 				setConversations(result?.metadata);
 			}
 			// console.log(error)
-		}
+		};
 
 		LoadConversations();
-	}, [])
+	}, []);
 
 	return (
 		<>
@@ -117,19 +117,29 @@ export default function HomePage() {
 					/>
 				</div>
 
-				{/* CHATBOX MESSAGES */}
-				<div className="2xl:w-[47%] sm:w-[80%] min-h-[60dvh] max-h-[60dvh] flex flex-col items-center justify-center shadow-messagebox">
-					<MessageBox
-						conversation={conversations[selectedIndex]}
-					/>
-				</div>
+				{selectedIndex === null ? (
+					<>
+						<div className="2xl:w-[70%] sm:w-[80%] min-h-[60dvh] max-h-[60dvh] flex flex-col items-center justify-center shadow-messagebox">
+							<img className="w-72" src="/logo_2.png" alt="" />
+						</div>
+					</>
+				) : (
+					<>
+						{/* CHATBOX MESSAGES */}
+						<div className="2xl:w-[47%] sm:w-[80%] min-h-[60dvh] max-h-[60dvh] flex flex-col items-center justify-center shadow-messagebox">
+							<MessageBox
+								conversation={conversations[selectedIndex]}
+							/>
+						</div>
 
-				{/* USER CONTACT INFORMATION */}
-				<div className="w-[20%] min-h-[60dvh] max-h-[60dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
-					<ContactInfo
-						conversation={conversations[selectedIndex]}
-					/>
-				</div>
+						{/* USER CONTACT INFORMATION */}
+						<div className="w-[20%] min-h-[60dvh] max-h-[60dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
+							<ContactInfo
+								conversation={conversations[selectedIndex]}
+							/>
+						</div>
+					</>
+				)}
 			</div>
 		</>
 	);
