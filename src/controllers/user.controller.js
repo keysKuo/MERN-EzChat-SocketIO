@@ -1,4 +1,5 @@
 const { SuccessResponse } = require("../middlewares/success.response");
+const ConversationService = require("../services/conversation.services");
 const UserService = require("../services/user.services");
 
 class UserController {
@@ -8,6 +9,16 @@ class UserController {
 		return new SuccessResponse({
 			code: 200,
 			message: `✔️ Found ${metadata.length} Other Users`,
+			metadata,
+		}).send({ response: res });
+	}
+
+	static async getHistoryConversations(req, res, next) {
+		const userId = req.user._id;
+		const metadata = await ConversationService.getHistoryConversations({userId});
+		return new SuccessResponse({
+			code: 200,
+			message: `✔️ Found ${metadata.length} Conversations`,
 			metadata,
 		}).send({ response: res });
 	}

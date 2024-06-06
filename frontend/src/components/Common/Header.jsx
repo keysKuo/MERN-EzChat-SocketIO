@@ -1,53 +1,36 @@
-import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-	LuChevronDown,
-	LuFolderOpen,
-	LuHelpCircle,
-	LuLogOut,
-	LuSearch,
-	LuTicket,
-	LuUser,
-} from "react-icons/lu";
-import { AuthContext } from "../../contexts/AuthProvider";
+import { LuChevronDown } from "react-icons/lu";
+import { AuthContext, useAuthContext } from "../../contexts/AuthProvider";
 import configDev from "../../configs/config.dev";
 import axios from "axios";
+import { useAPI } from "../../hooks";
 
 const logo_url = "/logo.png";
 
 export default function Header() {
-	const { user, setUser } = useContext(AuthContext);
+	const { user, setUser } = useAuthContext();
+	const { fetch, loading, error } = useAPI();
 	const navigate = useNavigate();
 
-	const onLogout = () => {
-		const Logout = async (req, res, next) => {
-			const options = {
-				url: configDev.API_URL + "/auth/logOut",
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"x-client-id": user._id,
-				},
-				withCredentials: true,
-			};
-
-			await axios
-				.request(options)
-				.then((response) => response.data)
-				.then((result) => {
-					if (result.success) {
-						setUser(null);
-						localStorage.clear();
-						navigate("/login");
-					}
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-			// console.log(options);
+	const onLogout = async () => {
+		const options = {
+			url: configDev.API_URL + "/auth/logOut",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"x-client-id": user._id,
+			},
+			withCredentials: true,
 		};
 
-		Logout();
+		const result = await fetch(options);
+		clearUser();
+		navigate("/login");
+	};
+
+	const clearUser = () => {
+		setUser(null);
+		localStorage.clear();
 	};
 
 	return (

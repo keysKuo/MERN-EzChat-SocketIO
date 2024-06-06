@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const conversationModel = require("../models/conversation.model");
 
 class ConversationService {
@@ -28,6 +29,32 @@ class ConversationService {
 			})
 			.populate("messages")
 			.lean();
+	}
+
+	static async getHistoryConversations({ userId }) {
+		return await conversationModel
+			.find({
+				participants: { $in: [userId] },
+			})
+			.populate({
+				path: "messages",
+				options: {
+					limit: 20, 
+					select: "message sender receiver createdAt", 
+				},
+			})
+			.populate({ path: "participants", select: "-password" })
+			.lean()
+			.then((conversations) => {
+				return conversations.map((conv) => {
+					return {
+						...conv,
+						partner: conv.participants.filter(
+							(p) => p._id.toString() !== userId.toString()
+						)[0],
+					};
+				});
+			});
 	}
 }
 

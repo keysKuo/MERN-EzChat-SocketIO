@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import {
 	LuMoreHorizontal,
 	LuPhone,
@@ -7,9 +7,36 @@ import {
 	LuVideo,
 } from "react-icons/lu";
 import Message from "./Message";
+import { useAPI } from "../../../hooks";
+import configDev from "../../../configs/config.dev";
+import { useAuthContext } from "../../../contexts/AuthProvider";
 
-export default function MessageBox({ conversation }) {
+export default function MessageBox({ conversation, partnerId }) {
 	const chatBoxRef = useRef(null);
+	const { user, setUser } = useAuthContext();
+	const { fetch, loading, error } = useAPI();
+	
+	useEffect(() => {
+		const LoadMessages = async () => {
+			const options = {
+				url: configDev.API_URL + `/messages/chat/${partnerId}`,
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					"x-client-id": user._id,
+				},
+				withCredentials: true,
+			};
+
+			const result = await fetch(options);
+			if(result) {
+				console.log(result);
+			}
+			console.log(error)
+		}
+
+		// LoadMessages();
+	}, [])
 
 	// Tự cuộn xuống cuối mỗi khi messages thay đổi
 	useLayoutEffect(() => {
@@ -67,7 +94,7 @@ export default function MessageBox({ conversation }) {
 					{conversation?.messages.map((chat, idx) => {
 						const nextChat = conversation?.messages[idx + 1];
 						const isHiddenTime =
-							!(nextChat?.userId !== chat?.userId) &&
+							!(nextChat?.sender !== chat?.sender) &&
 							new Date(nextChat?.createdAt).getTime() -
 								new Date(chat.createdAt).getTime() <
 								60;
@@ -75,7 +102,7 @@ export default function MessageBox({ conversation }) {
 						return (
 							<Message
 								key={idx}
-								type={chat.userId == 2 ? "right" : "left"}
+								type={chat.sender == user._id ? "right" : "left"}
 								message={chat.message}
 								createdAt={chat.createdAt}
 								hiddenTime={isHiddenTime}

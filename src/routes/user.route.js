@@ -8,4 +8,6 @@ router.use(catchAsync(verifyAuth));
 
 router.get("/list", catchAsync(UserController.getOtherUsers));
 
+router.get('/history', catchAsync(UserController.getHistoryConversations));
+
 module.exports = router;

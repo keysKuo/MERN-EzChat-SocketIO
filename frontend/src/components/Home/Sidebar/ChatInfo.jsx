@@ -8,7 +8,7 @@ export default function Conversation({
 	...props
 }) {
 	const formattedCreatedAt = formatTimestamp(
-		conversation?.lastMessage?.createdAt
+		conversation?.messages[conversation.messages.length - 1]?.createdAt
 	).split("-");
 	const formatTime =
 		formattedCreatedAt.length > 1
@@ -41,7 +41,7 @@ export default function Conversation({
 
 				<div className="max-w-[90%] truncate">
 					<span className="text-gray-400 text-sm">
-						{conversation?.lastMessage?.message}
+						{conversation?.messages[conversation.messages.length - 1]?.message}
 					</span>
 				</div>
 			</div>

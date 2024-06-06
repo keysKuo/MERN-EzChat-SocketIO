@@ -10,12 +10,13 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
 const path = require("path");
+const configs = require("./configs");
 
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
 app.use(cors({
-	origin: [process.env.FRONTEND_URL || "http://localhost:5173", "*"],
+	origin: configs['frontendURL'],
 	credentials: true,
 }));
 app.use(express.json());

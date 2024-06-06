@@ -1,56 +1,45 @@
 import React, { useContext, useEffect, useState } from "react";
 import { LuAtSign, LuKey } from "react-icons/lu";
 import GoogleSVG from "../components/SVG/GoogleSVG";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import configDev from "../configs/config.dev";
 import { AuthContext } from "../contexts/AuthProvider";
-import axios from "axios";
+import { useAPI } from "../hooks";
 
 export default function LoginPage() {
 	const { user, setUser } = useContext(AuthContext);
-	const navigate = useNavigate();
-	
-	useEffect(() => {
-		if(user) {
-			navigate("/");
-		}
-	}, [user]);
-
+	const { fetch, loading, error } = useAPI();
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
 	});
+
+	const onSubmit = async () => {
+		const options = {
+			url: configDev.API_URL + "/auth/signIn",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			data: formData,
+			withCredentials: true,
+		};
+
+		const result = await fetch(options);
+		if (result) {
+			storeUser(result);
+		}
+	};
 
 	const handleChangeInput = (e) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
 	};
 
-	const onSubmit = () => {
-		const Login = async () => {
-			const options = {
-				url: configDev.API_URL + "/auth/signIn",
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				data: formData,
-				withCredentials: true,
-			};
-
-			await axios.request(options).then((response) => {
-				const result = response.data;
-
-				if (result.success) {
-					storeUser(result);
-					navigate("/");
-				}
-			}).catch(err => {
-				console.log(err)
-			})
-		};
-
-		Login();
+	const handleKeyDown = (e) => {
+		if (e.key === "Enter") {
+			onSubmit();
+		}
 	};
 
 	const storeUser = (result) => {
@@ -70,7 +59,6 @@ export default function LoginPage() {
 				<LuAtSign />
 				<input
 					type="email"
-					className="grow"
 					placeholder="Email"
 					name="email"
 					value={formData["email"]}
@@ -83,27 +71,41 @@ export default function LoginPage() {
 				<LuKey />
 				<input
 					type="password"
-					className="grow"
 					placeholder="Password"
 					name="password"
 					value={formData["password"]}
+					onKeyDown={handleKeyDown}
 					onChange={(e) => {
 						handleChangeInput(e);
 					}}
 				/>
 			</label>
 
+			{error && (
+				<div className="w-[60%] px-4 py-2 mt-2 text-center text-xs bg-red-400 text-white rounded opacity-90">
+					{error}
+				</div>
+			)}
+
 			<button
+				disabled={loading}
 				onClick={onSubmit}
 				className="w-[40%] h-10 rounded-badge text-center mt-3
-        	bg-zinc-600 hover:bg-[#71b190] flex items-center justify-center"
+        	  bg-zinc-500 hover:bg-zinc-600 flex items-center justify-center"
 			>
-				<span className="text-white text-base">Login</span>
+				{loading ? (
+					<span className="loading loading-infinity text-white"></span>
+				) : (
+					<span className="text-white text-base">Login</span>
+				)}
 			</button>
 
 			<div className="divider text-xs my-1">OR</div>
 
-			<Link to={"/register"} className="text-xs text-zinc-800 hover:text-[#71b190]">
+			<Link
+				to={"/register"}
+				className="text-xs text-zinc-800 hover:text-[#71b190]"
+			>
 				Your don't have any account?
 			</Link>
 

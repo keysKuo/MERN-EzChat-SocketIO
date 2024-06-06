@@ -3,8 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import MessageBox from "../components/Home/MessageBox/MessageBox";
 import Sidebar from "../components/Home/Sidebar/Sidebar";
 import ContactInfo from "../components/Home/ContactInfo/ContactInfo";
-import { AuthContext } from "../contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import configDev from "../configs/config.dev";
+import { useAPI } from "../hooks";
+import { useAuthContext } from "../contexts/AuthProvider";
 
 let fakeChat_1 = [
 	{
@@ -72,16 +74,33 @@ let fakeConversations = [
 ];
 
 export default function HomePage() {
-	const { user, setUser } = useContext(AuthContext);
 	const [selectedIndex, setSelectedIndex] = useState(0);
-    const navigate = useNavigate();
     // localStorage.clear();
+	const {user , setUser} = useAuthContext();
+	const { fetch, loading, error } = useAPI();
+	const [ conversations, setConversations] = useState([]);
 
-    useEffect(() => {
-		if (!user) {
-			navigate("/login");
+	useEffect(() => {
+		const LoadConversations = async () => {
+			const options = {
+				url: configDev.API_URL + `/users/history`,
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					"x-client-id": user._id,
+				},
+				withCredentials: true,
+			};
+
+			const result = await fetch(options);
+			if(result) {
+				setConversations(result?.metadata);
+			}
+			// console.log(error)
 		}
-	}, [user]);
+
+		LoadConversations();
+	}, [])
 
 	return (
 		<>
@@ -92,7 +111,7 @@ export default function HomePage() {
                     max-h-[60dvh] flex flex-col items-start justify-start p-8 bg-[#F5F6F6] shadow-messagebox gap-4"
 				>
 					<Sidebar
-						conversations={fakeConversations}
+						conversations={conversations}
 						selectedIndex={selectedIndex}
 						setSelectedIndex={setSelectedIndex}
 					/>
@@ -101,14 +120,14 @@ export default function HomePage() {
 				{/* CHATBOX MESSAGES */}
 				<div className="2xl:w-[47%] sm:w-[80%] min-h-[60dvh] max-h-[60dvh] flex flex-col items-center justify-center shadow-messagebox">
 					<MessageBox
-						conversation={fakeConversations[selectedIndex]}
+						conversation={conversations[selectedIndex]}
 					/>
 				</div>
 
 				{/* USER CONTACT INFORMATION */}
 				<div className="w-[20%] min-h-[60dvh] max-h-[60dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
 					<ContactInfo
-						conversation={fakeConversations[selectedIndex]}
+						conversation={conversations[selectedIndex]}
 					/>
 				</div>
 			</div>
