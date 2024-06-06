@@ -26,6 +26,7 @@ services:
       - NODE_ENV= production
       - FRONTEND_URL= https://ezticket.io.vn
       - BACKEND_URL= https://ezticket.io.vn
+      - MONGODB_URL = mongodb+srv://nonkeys124:xOJafmT2rTc6Tr47@ezteam.yqofwng.mongodb.net/EzChat
 
   nginx:
     image: nginx:alpine
