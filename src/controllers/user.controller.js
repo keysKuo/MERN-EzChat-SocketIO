@@ -22,6 +22,16 @@ class UserController {
 			metadata,
 		}).send({ response: res });
 	}
+
+	static async getHistoryConversations_v2(req, res, next) {
+		const userId = req.user._id;
+		const metadata = await ConversationService.getHistoryConversations_v2({userId});
+		return new SuccessResponse({
+			code: 200,
+			message: `✔️ Found Conversations`,
+			metadata,
+		}).send({ response: res });
+	}
 }
 
 module.exports = UserController;

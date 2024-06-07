@@ -2,9 +2,9 @@ import React from "react";
 import { LuMoreHorizontal, LuPhone, LuTrash, LuVideo } from "react-icons/lu";
 import { useSocketContext } from "../../../contexts/SocketProvider";
 
-export default function ContactInfo({ conversation }) {
+export default function ContactInfo({ conversations, selectedIndex, setConversation }) {
 	const { onlineUsers } = useSocketContext();
-	const userStatus = onlineUsers.includes(conversation?.partner?._id) ? 'online' : 'offline'
+	const userStatus = onlineUsers.includes(conversations[selectedIndex].partner?._id) ? 'online' : 'offline'
 
 	return (
 		<>
@@ -20,7 +20,7 @@ export default function ContactInfo({ conversation }) {
 					<div className="w-[6rem] rounded-full">
 						<img
 							src={
-								conversation?.partner?.avatar ||
+								conversations[selectedIndex].partner?.avatar ||
 								"https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
 							}
 						/>
@@ -29,7 +29,7 @@ export default function ContactInfo({ conversation }) {
 
 				{/* NAME */}
 				<div className="font-bold text-xl">
-					{conversation?.partner?.username}
+					{conversations[selectedIndex].partner?.username}
 				</div>
 
 				{/* STATUS */}
@@ -51,7 +51,7 @@ export default function ContactInfo({ conversation }) {
 			<div className="flex flex-col items-start justify-start self-start gap-2 w-full">
 				<div className="text-sm font-bold">About</div>
 				<div className="text-sm text-gray-400 mb-1">
-					Hello My name is {conversation?.partner?.username}...
+					Hello My name is {conversations[selectedIndex].partner?.username}...
 				</div>
 				<div className="text-sm font-bold">Media,links and doc</div>
 				<div className="flex items-start justify-start gap-1 mb-4">

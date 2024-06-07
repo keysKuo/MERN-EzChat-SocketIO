@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	LuMoreHorizontal,
 	LuPhone,
@@ -11,36 +11,23 @@ import { useAPI } from "../../../hooks";
 import configDev from "../../../configs/config.dev";
 import { useAuthContext } from "../../../contexts/AuthProvider";
 import { useSocketContext } from "../../../contexts/SocketProvider";
-import notificationSound from '../../../assets/notification.mp3';
 
-export default function MessageBox({ conversation }) {
+
+export default function MessageBox({ conversations, selectedIndex, setConversations }) {
 	const chatBoxRef = useRef(null);
 	const { user, setUser } = useAuthContext();
 	const { fetch, loading, error } = useAPI();
 	const [input, setInput] = useState("");
-	const [chatMessages, setChatMessages] = useState(conversation.messages);
-	const { socket, onlineUsers } = useSocketContext();
-	const userStatus = onlineUsers.includes(conversation?.partner?._id) ? 'online' : 'offline'
+	const { onlineUsers } = useSocketContext();
+	const userStatus = onlineUsers.includes(conversations[selectedIndex].partner?._id) ? 'online' : 'offline'
 
 	useEffect(() => {
-		setChatMessages(conversation.messages);
-	}, [conversation, setChatMessages]);
-
-	useEffect(() => {
-		socket?.on("newMessage", newMessage => {
-			newMessage.shouldShake = true;
-			const sound = new Audio(notificationSound);
-			sound.play();
-			setChatMessages([...chatMessages, newMessage]);
-		})
-
-		return () => socket?.off("newMessage");
-	}, [socket, chatMessages, setChatMessages])
+	}, [conversations, setConversations]);
 
 	// Tự cuộn xuống cuối mỗi khi messages thay đổi
 	useEffect(() => {
 		scrollToBottom();
-	}, [chatMessages]);
+	}, [conversations]);
 
 	// Hàm cuộn xuống cuối
 	const scrollToBottom = () => {
@@ -67,7 +54,7 @@ export default function MessageBox({ conversation }) {
 		const options = {
 			url:
 				configDev.API_URL +
-				`/messages/send/${conversation?.partner?._id}`,
+				`/messages/send/${conversations[selectedIndex].partner?._id}`,
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -82,9 +69,10 @@ export default function MessageBox({ conversation }) {
 		clearInput();
 		const result = await fetch(options);
 		if (result) {
-			// console.log(result);
-			setChatMessages([...chatMessages, result.metadata]);
-			
+			const newMessage = result.metadata;
+			let updatedCoversations = {...conversations};
+			updatedCoversations[newMessage.receiver].messages.push(newMessage);
+			setConversations({...updatedCoversations});
 		}
 	};
 
@@ -101,7 +89,7 @@ export default function MessageBox({ conversation }) {
 						<div className="w-12 rounded-full">
 							<img
 								src={
-									conversation?.partner?.avatar ||
+									conversations[selectedIndex].partner?.avatar ||
 									"https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
 								}
 							/>
@@ -110,10 +98,10 @@ export default function MessageBox({ conversation }) {
 
 					<div className="flex flex-col items-start justify-center">
 						<span className="font-bold">
-							{conversation?.partner?.username}
+							{conversations[selectedIndex].partner?.username}
 						</span>
 						<span className="text-xs text-gray-400">
-							{userStatus}
+							${userStatus}
 						</span>
 					</div>
 				</div>
@@ -137,8 +125,8 @@ export default function MessageBox({ conversation }) {
 				className="chatbox-content overflow-y-scroll overflow-x-hidden w-full flex flex-1 flex-col items-start justify-between 2xl:px-5 px-7 py-2"
 			>
 				<div className="w-full flex flex-col items-start justify-between">
-					{chatMessages.map((chat, idx) => {
-						const nextChat = chatMessages[idx + 1];
+					{conversations[selectedIndex].messages?.map((chat, idx) => {
+						const nextChat = conversations[selectedIndex].messages[idx + 1];
 						const elapseTime =
 							Math.abs(
 								new Date(nextChat?.createdAt) -

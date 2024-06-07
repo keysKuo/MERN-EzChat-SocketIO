@@ -3,22 +3,29 @@ import React, { useContext, useEffect, useState } from "react";
 import MessageBox from "../components/Home/MessageBox/MessageBox";
 import Sidebar from "../components/Home/Sidebar/Sidebar";
 import ContactInfo from "../components/Home/ContactInfo/ContactInfo";
-import { useNavigate } from "react-router-dom";
 import configDev from "../configs/config.dev";
 import { useAPI } from "../hooks";
 import { useAuthContext } from "../contexts/AuthProvider";
+import { useSocketContext } from "../contexts/SocketProvider";
+import notificationSound from '../assets/notification.mp3';
 
 export default function HomePage() {
-	const [selectedIndex, setSelectedIndex] = useState(null);
-	// localStorage.clear();
+	// Contexts
 	const { user, setUser } = useAuthContext();
+	const { socket, onlineUsers } = useSocketContext();
+
+	// States
+	const [selectedIndex, setSelectedIndex] = useState(null);
+	const [conversations, setConversations] = useState({});
+
+	// Hooks
 	const { fetch, loading, error } = useAPI();
-	const [conversations, setConversations] = useState([]);
-	
+
+	// Load Conversations from Backend
 	useEffect(() => {
 		const LoadConversations = async () => {
 			const options = {
-				url: configDev.API_URL + `/users/history`,
+				url: configDev.API_URL + `/users/history_v2`,
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -29,7 +36,8 @@ export default function HomePage() {
 
 			const result = await fetch(options);
 			if (result) {
-				setConversations(result?.metadata);
+				// console.log(result);
+				setConversations({...result?.metadata});
 			}
 			// console.log(error)
 		};
@@ -37,6 +45,21 @@ export default function HomePage() {
 		LoadConversations();
 	}, [setConversations]);
 
+	// Listen Send message
+	useEffect(() => {
+		socket?.on("newMessage", newMessage => {
+			newMessage.shouldShake = true;
+			const sound = new Audio(notificationSound);
+			sound.play();
+			let updatedCoversations = {...conversations};
+			updatedCoversations[newMessage.sender].messages.push(newMessage);
+			setConversations({...updatedCoversations});
+		})
+
+		return () => socket?.off("newMessage");
+	}, [socket, conversations, setConversations])
+
+	
 	return (
 		<>
 			{loading ? (
@@ -72,14 +95,18 @@ export default function HomePage() {
 							{/* CHATBOX MESSAGES */}
 							<div className="2xl:w-[47%] sm:w-[80%] min-h-[60dvh] max-h-[60dvh] flex flex-col items-center justify-center shadow-messagebox">
 								<MessageBox
-									conversation={conversations[selectedIndex]}
+									conversations={conversations}
+									selectedIndex={selectedIndex}
+									setConversations={setConversations}
 								/>
 							</div>
 
 							{/* USER CONTACT INFORMATION */}
 							<div className="w-[20%] min-h-[60dvh] max-h-[60dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
 								<ContactInfo
-									conversation={conversations[selectedIndex]}
+									conversations={conversations}
+									selectedIndex={selectedIndex}
+									setConversations={setConversations}
 								/>
 							</div>
 						</>

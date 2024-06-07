@@ -39,9 +39,9 @@ class ConversationService {
 			.populate({
 				path: "messages",
 				options: {
-					limit: 50, 
+					limit: 50,
 					sort: { createdAt: -1 },
-					select: "message sender receiver createdAt", 
+					select: "message sender receiver createdAt",
 				},
 			})
 			.populate({ path: "participants", select: "-password" })
@@ -53,9 +53,42 @@ class ConversationService {
 						partner: conv.participants.filter(
 							(p) => p._id.toString() !== userId.toString()
 						)[0],
-						messages: conv.messages.reverse()
+						messages: conv.messages.reverse(),
 					};
 				});
+			});
+	}
+
+	static async getHistoryConversations_v2({ userId }) {
+		return await conversationModel
+			.find({
+				participants: { $in: [userId] },
+			})
+			.populate({
+				path: "messages",
+				options: {
+					limit: 50,
+					sort: { createdAt: -1 },
+					select: "message sender receiver createdAt",
+				},
+			})
+			.populate({ path: "participants", select: "-password" })
+			.lean()
+			.then((conversations) => {
+				const conversationMap = {};
+				
+				conversations.forEach((conv) => {
+					let partner = conv.participants.filter(
+						(p) => p._id.toString() !== userId.toString()
+					)[0];
+					conversationMap[partner._id] = {
+						...conv,
+						partner,
+						messages: conv.messages.reverse(),
+					};
+				});
+
+				return conversationMap;
 			});
 	}
 }

@@ -4,6 +4,7 @@ import ChatInfo from "./ChatInfo";
 import OnlineUsers from "./OnlineUsers";
 
 export default function Sidebar({ conversations, selectedIndex, setSelectedIndex }) {
+	console.log(conversations)
 	return (
 		<>
 			{/* HEADER */}
@@ -15,7 +16,7 @@ export default function Sidebar({ conversations, selectedIndex, setSelectedIndex
 			{/* ONLINE USERS LIST */}
 			<div className="flex items-center justify-start gap-4">
 				<OnlineUsers
-					users={conversations?.map((conv) => conv.partner)}
+					users={Object.entries(conversations)?.map(([key, conv]) => conv.partner)}
 				/>
 			</div>
 
@@ -35,14 +36,14 @@ export default function Sidebar({ conversations, selectedIndex, setSelectedIndex
 				<span className="text-[1rem] px-4">ALL CHATS</span>
 
 				<div className="chat-list flex flex-col items-start justify-center w-full gap-2 overflow-y-scroll">
-					{conversations?.map((conv, idx) => {
+					{Object.entries(conversations)?.map(([key, conv]) => {
 						return (
 							<ChatInfo
-								key={idx}
-								active={idx === selectedIndex}
+								key={key}
+								active={key === selectedIndex}
 								conversation={conv}
 								onClick={() => {
-									setSelectedIndex(idx);
+									setSelectedIndex(key);
 								}}
 							/>
 						);
