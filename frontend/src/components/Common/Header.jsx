@@ -41,12 +41,12 @@ export default function Header() {
             border-b-1 border-slate-500 shadow-messagebox"
 		>
 			<div className="flex items-center h-[100%] ml-10">
-				<Link
-					to="/"
+				<a
+					href="/"
 					className="flex items-center justify-center w-[30%]"
 				>
 					<img src={logo_url} className="w-[50%]" />
-				</Link>
+				</a>
 			</div>
 			<div className="flex items-center justify-center h-[100%] mr-10 ml-auto">
 				<div className="flex items-center text-zinc-800 text-sm">

@@ -1,5 +1,5 @@
 import React from "react";
-import { LuPhone, LuTrash, LuVideo } from "react-icons/lu";
+import { LuMoreHorizontal, LuPhone, LuTrash, LuVideo } from "react-icons/lu";
 
 export default function ContactInfo({ conversation }) {
 	return (
@@ -24,10 +24,14 @@ export default function ContactInfo({ conversation }) {
 				</div>
 
 				{/* NAME */}
-				<div className="font-bold text-xl">{conversation?.partner?.username}</div>
+				<div className="font-bold text-xl">
+					{conversation?.partner?.username}
+				</div>
 
 				{/* STATUS */}
-				<span className="text-xs text-gray-400">{conversation?.partner?.status}</span>
+				<span className="text-xs text-gray-400">
+					{conversation?.partner?.status}
+				</span>
 
 				{/* ICONS */}
 				<div className="flex items-center justify-center gap-3 py-5">
@@ -47,26 +51,32 @@ export default function ContactInfo({ conversation }) {
 				</div>
 				<div className="text-sm font-bold">Media,links and doc</div>
 				<div className="flex items-start justify-start gap-1 mb-4">
-					<img
-						className="rounded-lg"
-						src="https://picsum.photos/50/50"
-						alt=""
-					/>
-					<img
-						className="rounded-lg"
-						src="https://picsum.photos/50/50"
-						alt=""
-					/>
-					<img
-						className="rounded-lg"
-						src="https://picsum.photos/50/50"
-						alt=""
-					/>
-					<img
-						className="rounded-lg"
-						src="https://picsum.photos/50/50"
-						alt=""
-					/>
+					<div className="flex items-center justify-center w-12 h-12">
+						<img
+							className="rounded-md"
+							src="https://picsum.photos/50/50?random=1"
+							alt=""
+						/>
+					</div>
+					<div className="flex items-center justify-center w-12 h-12">
+						<img
+							className="rounded-md"
+							src="https://picsum.photos/50/50?random=2"
+							alt=""
+						/>
+					</div>
+					<div className="flex items-center justify-center w-12 h-12">
+						<img
+							className="rounded-md"
+							src="https://picsum.photos/50/50?random=3"
+							alt=""
+						/>
+					</div>
+					<div className="flex items-center justify-center w-12 h-12 cursor-pointer">
+						<div className="flex items-center justify-center w-8 h-4 rounded-full bg-[#ccc]">
+							<LuMoreHorizontal size={20} />
+						</div>
+					</div>
 				</div>
 
 				<div className="flex items-center justify-between w-full">

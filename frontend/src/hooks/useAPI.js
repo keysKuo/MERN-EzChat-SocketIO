@@ -34,7 +34,7 @@ export default function useAPI() {
 				setTimeout(() => {
 					setLoading(false);
 					setError(null);
-				}, 2000);
+				}, 1000);
 			});
 	};
 
