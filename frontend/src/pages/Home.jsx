@@ -8,78 +8,13 @@ import configDev from "../configs/config.dev";
 import { useAPI } from "../hooks";
 import { useAuthContext } from "../contexts/AuthProvider";
 
-let fakeChat_1 = [
-	{
-		userId: 1,
-		message: "Hi there, how are you ?",
-		createdAt: `2024-06-04T12:10:54.440+00:00`,
-	},
-	{
-		userId: 2,
-		message: `Good, What's up Bro ?`,
-		createdAt: `2024-06-04T15:10:54.440+00:00`,
-	},
-	{
-		userId: 2,
-		message: "Hangout tonight ?",
-		createdAt: `2024-06-04T15:10:54.440+00:00`,
-	},
-	{
-		userId: 1,
-		message: "Sure, What time?",
-		createdAt: `2024-06-04T15:10:54.440+00:00`,
-	},
-];
-
-let fakeChat_2 = [
-	{
-		userId: 2,
-		message: "Will you go to my party ?",
-		createdAt: `2024-06-04T12:10:54.440+00:00`,
-	},
-	{
-		userId: 3,
-		message: `I don't know, will you?`,
-		createdAt: `2024-06-04T15:10:54.440+00:00`,
-	},
-];
-
-let fakeConversations = [
-	{
-		partner: {
-			userId: "1",
-			username: "Kryo Kuo",
-			avatar: "https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg",
-			status: "online",
-		},
-		lastMessage: {
-			message: `Sure, What time?`,
-			createdAt: `2024-06-04T15:10:54.440+00:00`,
-		},
-		messages: fakeChat_1,
-	},
-	{
-		partner: {
-			userId: "3",
-			username: "Serena Irr",
-			avatar: "https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg",
-			status: "offline",
-		},
-		lastMessage: {
-			message: `I don't know, will you?`,
-			createdAt: `2024-06-04T17:10:54.440+00:00`,
-		},
-		messages: fakeChat_2,
-	},
-];
-
 export default function HomePage() {
 	const [selectedIndex, setSelectedIndex] = useState(null);
 	// localStorage.clear();
 	const { user, setUser } = useAuthContext();
 	const { fetch, loading, error } = useAPI();
 	const [conversations, setConversations] = useState([]);
-
+	
 	useEffect(() => {
 		const LoadConversations = async () => {
 			const options = {
@@ -100,7 +35,7 @@ export default function HomePage() {
 		};
 
 		LoadConversations();
-	}, []);
+	}, [setConversations]);
 
 	return (
 		<>
