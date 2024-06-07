@@ -1,10 +1,9 @@
-require("dotenv").config();
-
-const compression = require("compression");
 const express = require("express");
-const { default: helmet } = require("helmet");
-const morgan = require("morgan");
 const app = express();
+require("dotenv").config();
+const { default: helmet } = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
 const { checkOverload } = require("./helpers/check.connect");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");

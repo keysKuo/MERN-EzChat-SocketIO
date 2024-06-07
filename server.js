@@ -1,32 +1,68 @@
-const app = require("./src/app");
+require("dotenv").config();
+const express = require('express');
 const configs = require("./src/configs");
-const http = require("http");
-const { Server } = require("socket.io");
+const { server, app } = require("./src/socket");
 
-const server = http.createServer(app);
-const io = new Server(server, {
-	cors: {
-		origin: configs["frontendURL"],
-		methods: ["GET", "POST"],
-	},
+const { default: helmet } = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const expressSession = require("express-session");
+const path = require("path");
+
+app.use(morgan("dev"));
+app.use(helmet());
+app.use(compression());
+app.use(cors({
+	origin: configs['frontendURL'],
+	credentials: true,
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(
+	expressSession({
+		secret: "nkeyskuo SUDTECHNOLOGY",
+		resave: false,
+		saveUninitialized: true,
+		cookie: { secure: true },
+	})
+);
+app.use(express.static(path.join(__dirname, "public")));
+
+require("./src/dbs/init.mongodb"); // Singleton - A method or class that only construct once
+
+app.use("/api/v1", require("./src/routes"));
+
+app.get('/static/:resource', (req, res, next) => {
+	const { resource } = req.params;
+	res.sendFile(path.join(__dirname, `public`, resource));
+})
+
+// init routers
+app.get("/", (req, res, next) => {
+	return res.status(200).json({
+		msg: "Server Initialization",
+	});
 });
 
-const userSocketMap = {}; // { userId: socketId }
+// handling error
 
-io.on("connection", (socket) => {
-	console.log("✔️ New Client connected!", socket.id);
+app.use((req, res, next) => {
+	const error = new Error("❌ 404 Not Found");
+	error.status = 404;
 
-	const userId = socket.handshake.query.userId;
-	if(userId != 'undefinded') userSocketMap[userId] = socket.id;
+	next(error);
+});
 
-	// io.emit() is used to send event to all connected clients
-	io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
-	// socket.on() is used to listen events. can be used both on client and server
-	socket.on("disconnect", () => {
-		console.log("❌ Client disconnected", socket.id);
-		delete userSocketMap[userId];
-		io.emit("getOnlineUsers", Object.keys(userSocketMap));
+app.use((err, req, res, next) => {
+	const statusCode = err.code || 500;
+	return res.status(statusCode).json({
+		success: false,
+		code: statusCode,
+		// stack: err.stack,
+		message: err.message || "❌ Internal Server Error",
 	});
 });
 

@@ -39,7 +39,8 @@ class ConversationService {
 			.populate({
 				path: "messages",
 				options: {
-					limit: 20, 
+					limit: 50, 
+					sort: { createdAt: -1 },
 					select: "message sender receiver createdAt", 
 				},
 			})
@@ -52,6 +53,7 @@ class ConversationService {
 						partner: conv.participants.filter(
 							(p) => p._id.toString() !== userId.toString()
 						)[0],
+						messages: conv.messages.reverse()
 					};
 				});
 			});

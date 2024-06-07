@@ -1,5 +1,6 @@
 const { FileNotFoundError, ForbiddenError } = require('../middlewares/error.response');
 const messageModel = require('../models/message.model');
+const { getReceiverSocketId, io } = require('../socket');
 const ConversationService = require('./conversation.services');
 
 class MessageService {
@@ -13,6 +14,11 @@ class MessageService {
 
         const conversation = await ConversationService.setUpConversation({ senderId, receiverId, message: newMessage._id});
         if (!conversation) throw new FileNotFoundError('❌ Conversation Not Found');
+
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
 
         return newMessage;
     }

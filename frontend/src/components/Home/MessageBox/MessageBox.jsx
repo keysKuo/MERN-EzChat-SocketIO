@@ -11,6 +11,7 @@ import { useAPI } from "../../../hooks";
 import configDev from "../../../configs/config.dev";
 import { useAuthContext } from "../../../contexts/AuthProvider";
 import { useSocketContext } from "../../../contexts/SocketProvider";
+import notificationSound from '../../../assets/notification.mp3';
 
 export default function MessageBox({ conversation }) {
 	const chatBoxRef = useRef(null);
@@ -18,34 +19,23 @@ export default function MessageBox({ conversation }) {
 	const { fetch, loading, error } = useAPI();
 	const [input, setInput] = useState("");
 	const [chatMessages, setChatMessages] = useState(conversation.messages);
-	const { onlineUsers } = useSocketContext();
+	const { socket, onlineUsers } = useSocketContext();
 	const userStatus = onlineUsers.includes(conversation?.partner?._id) ? 'online' : 'offline'
 
 	useEffect(() => {
 		setChatMessages(conversation.messages);
-	}, [conversation]);
+	}, [conversation, setChatMessages]);
 
 	useEffect(() => {
-		const LoadMessages = async () => {
-			const options = {
-				url: configDev.API_URL + `/messages/chat/${partnerId}`,
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					"x-client-id": user._id,
-				},
-				withCredentials: true,
-			};
+		socket?.on("newMessage", newMessage => {
+			newMessage.shouldShake = true;
+			const sound = new Audio(notificationSound);
+			sound.play();
+			setChatMessages([...chatMessages, newMessage]);
+		})
 
-			const result = await fetch(options);
-			if (result) {
-				console.log(result);
-			}
-			console.log(error);
-		};
-
-		// LoadMessages();
-	}, []);
+		return () => socket?.off("newMessage");
+	}, [socket, chatMessages, setChatMessages])
 
 	// Tự cuộn xuống cuối mỗi khi messages thay đổi
 	useEffect(() => {
@@ -88,12 +78,13 @@ export default function MessageBox({ conversation }) {
 			},
 			withCredentials: true,
 		};
-
+		
+		clearInput();
 		const result = await fetch(options);
 		if (result) {
-			console.log(result);
+			// console.log(result);
 			setChatMessages([...chatMessages, result.metadata]);
-			clearInput();
+			
 		}
 	};
 
@@ -143,7 +134,7 @@ export default function MessageBox({ conversation }) {
 			{/* CONVERSATION'S MESSAGES */}
 			<div
 				ref={chatBoxRef}
-				className="chatbox-content overflow-y-scroll w-full flex flex-1 flex-col items-start justify-between px-5 py-2"
+				className="chatbox-content overflow-y-scroll overflow-x-hidden w-full flex flex-1 flex-col items-start justify-between 2xl:px-5 px-7 py-2"
 			>
 				<div className="w-full flex flex-col items-start justify-between">
 					{chatMessages.map((chat, idx) => {
@@ -166,6 +157,7 @@ export default function MessageBox({ conversation }) {
 								message={chat.message}
 								createdAt={chat.createdAt}
 								hiddenTime={isHiddenTime}
+								shouldShake={chat.shouldShake}
 							/>
 						);
 					})}
