@@ -10,6 +10,10 @@ services:
       - "5000:5000"
     networks:
       - ezt-network
+    environment:
+      - VITE_NODE_ENV=production
+      - VITE_SOCKET_URL=https://ezticket.io.vn/socket
+      - VITE_API_URL=https://ezticket.io.vn/api/v1
 
   backend:
     build:

@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { LuMoreVertical, LuSearch } from "react-icons/lu";
 import ChatInfo from "./ChatInfo";
 import OnlineUsers from "./OnlineUsers";
-import { useAuthContext } from "../../../contexts/AuthProvider";
 
 export default function Sidebar({ conversations, selectedIndex, setSelectedIndex }) {
-	const { user, setUser } = useAuthContext();
 	return (
 		<>
 			{/* HEADER */}

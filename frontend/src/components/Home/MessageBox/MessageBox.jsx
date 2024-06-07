@@ -10,6 +10,7 @@ import Message from "./Message";
 import { useAPI } from "../../../hooks";
 import configDev from "../../../configs/config.dev";
 import { useAuthContext } from "../../../contexts/AuthProvider";
+import { useSocketContext } from "../../../contexts/SocketProvider";
 
 export default function MessageBox({ conversation }) {
 	const chatBoxRef = useRef(null);
@@ -17,6 +18,8 @@ export default function MessageBox({ conversation }) {
 	const { fetch, loading, error } = useAPI();
 	const [input, setInput] = useState("");
 	const [chatMessages, setChatMessages] = useState(conversation.messages);
+	const { onlineUsers } = useSocketContext();
+	const userStatus = onlineUsers.includes(conversation?.partner?._id) ? 'online' : 'offline'
 
 	useEffect(() => {
 		setChatMessages(conversation.messages);
@@ -103,7 +106,7 @@ export default function MessageBox({ conversation }) {
 			{/* HEADER */}
 			<div className="chatbox-header w-full flex items-center justify-between bg-[#F5F6F6] px-4 py-2 mb-5">
 				<div className="flex items-center justify-center gap-2">
-					<div className={`avatar ${conversation?.partner?.status}`}>
+					<div className={`avatar ${userStatus}`}>
 						<div className="w-12 rounded-full">
 							<img
 								src={
@@ -119,7 +122,7 @@ export default function MessageBox({ conversation }) {
 							{conversation?.partner?.username}
 						</span>
 						<span className="text-xs text-gray-400">
-							{conversation?.partner?.status}
+							{userStatus}
 						</span>
 					</div>
 				</div>

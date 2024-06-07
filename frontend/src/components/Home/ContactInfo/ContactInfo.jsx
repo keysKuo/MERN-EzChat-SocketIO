@@ -1,7 +1,11 @@
 import React from "react";
 import { LuMoreHorizontal, LuPhone, LuTrash, LuVideo } from "react-icons/lu";
+import { useSocketContext } from "../../../contexts/SocketProvider";
 
 export default function ContactInfo({ conversation }) {
+	const { onlineUsers } = useSocketContext();
+	const userStatus = onlineUsers.includes(conversation?.partner?._id) ? 'online' : 'offline'
+
 	return (
 		<>
 			{/* HEADER */}
@@ -30,7 +34,7 @@ export default function ContactInfo({ conversation }) {
 
 				{/* STATUS */}
 				<span className="text-xs text-gray-400">
-					{conversation?.partner?.status}
+					{userStatus}
 				</span>
 
 				{/* ICONS */}

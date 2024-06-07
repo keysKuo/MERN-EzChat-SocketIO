@@ -1,12 +1,16 @@
 import React from "react";
 import { formatTimestamp } from "../../../ultils";
 import classNames from "classnames";
+import { useSocketContext } from "../../../contexts/SocketProvider";
 
 export default function Conversation({
 	conversation,
 	active = false,
 	...props
 }) {
+	const { onlineUsers } = useSocketContext();
+	const userStatus = onlineUsers.includes(conversation?.partner?._id) ? 'online' : 'offline'
+
 	const formattedCreatedAt = formatTimestamp(
 		conversation?.messages[conversation.messages.length - 1]?.createdAt
 	).split("-");
@@ -24,7 +28,7 @@ export default function Conversation({
 			})}
 		>
 			<div className="w-[20%] flex items-center">
-				<div className={`avatar ${conversation?.partner?.status}`}>
+				<div className={`avatar ${userStatus}`}>
 					<div className="w-12 rounded-full">
 						<img src={conversation?.partner?.avatar} />
 					</div>
