@@ -7,7 +7,7 @@ export default function OnlineUsers({ users }) {
 	return (
 		<>
 			{users.map((user, index) => {
-				if (onlineUsers.includes(user._id)) {
+				if (onlineUsers.includes(user?._id)) {
 					return (
 						<div key={index} className="avatar online">
 							<div className="w-10 rounded-full">

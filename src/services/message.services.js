@@ -15,6 +15,7 @@ class MessageService {
         const conversation = await ConversationService.setUpConversation({ senderId, receiverId, message: newMessage._id});
         if (!conversation) throw new FileNotFoundError('❌ Conversation Not Found');
 
+        // SEND SOCKET
         const receiverSocketId = getReceiverSocketId(receiverId);
         if (receiverId) {
             io.to(receiverSocketId).emit("newMessage", newMessage);

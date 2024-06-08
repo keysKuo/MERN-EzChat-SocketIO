@@ -11,7 +11,7 @@ class ConversationService {
 		};
 		const update = {
 			$set: { participants: [senderId, receiverId] },
-			$push: { messages: message },
+			$push: message && { messages: message },
 		};
 		const options = { upsert: true, new: true };
 

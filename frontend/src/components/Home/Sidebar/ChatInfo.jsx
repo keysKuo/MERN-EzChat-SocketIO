@@ -27,7 +27,7 @@ export default function Conversation({
 				"bg-[#E8ECEF]": active,
 			})}
 		>
-			<div className="w-[20%] flex items-center">
+			<div className="flex items-center">
 				<div className={`avatar ${userStatus}`}>
 					<div className="w-12 rounded-full">
 						<img src={conversation?.partner?.avatar} />
@@ -35,12 +35,12 @@ export default function Conversation({
 				</div>
 			</div>
 
-			<div className="lg:w-[80%] w-[70%] flex flex-col items-start justify-center">
+			<div className="lg:w-[80%] w-[70%] flex flex-1 flex-col items-start justify-center">
 				<div className="flex items-center justify-between w-full">
 					<span className="font-bold">
 						{conversation?.partner?.username}
 					</span>
-					<span className="text-gray-400 text-xs">{formatTime}</span>
+					<span className="text-gray-400 text-xs lg:flex hidden">{formatTime}</span>
 				</div>
 
 				<div className="max-w-[90%] truncate">

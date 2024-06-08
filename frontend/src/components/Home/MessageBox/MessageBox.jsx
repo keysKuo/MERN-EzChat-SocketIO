@@ -33,7 +33,7 @@ export default function MessageBox({ conversations, selectedIndex, setSelectedIn
 	// Tự cuộn xuống cuối mỗi khi messages thay đổi
 	useEffect(() => {
 		scrollToBottom();
-	}, [conversations]);
+	}, [conversations, selectedIndex]);
 
 	// Hàm cuộn xuống cuối
 	const scrollToBottom = () => {

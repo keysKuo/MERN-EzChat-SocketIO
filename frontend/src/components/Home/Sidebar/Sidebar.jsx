@@ -2,10 +2,81 @@ import React, { useEffect, useState } from "react";
 import { LuMoreVertical, LuSearch } from "react-icons/lu";
 import ChatInfo from "./ChatInfo";
 import OnlineUsers from "./OnlineUsers";
+import debounce from "lodash/debounce";
+import { useAPI } from "../../../hooks";
+import configDev from "../../../configs/config.dev";
+import { useAuthContext } from "../../../contexts/AuthProvider";
 
-export default function Sidebar({ conversations, selectedIndex, setSelectedIndex }) {
+export default function Sidebar({
+	conversations,
+	selectedIndex,
+	setSelectedIndex,
+	setConversations,
+}) {
+	const [searchValue, setSearchValue] = useState("");
+	const { fetch, loading, error } = useAPI();
+	const { user } = useAuthContext();
+	const onSearch = async () => {
+		const options = {
+			url: configDev.API_URL + `/users/search`,
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"x-client-id": user._id,
+			},
+			data: {
+				email: searchValue,
+			},
+			withCredentials: true,
+		};
+
+		clearInput();
+		const result = await fetch(options);
+		if (result) {
+			// console.log(result);
+			const partner = result.metadata;
+			const partnerList = Object.entries(conversations).map(([key,conv]) => conv.partner);
+			
+			if (partnerList.find(p => p._id.toString() === partner._id.toString())) {
+				setSelectedIndex(partner._id);
+				return;
+			}
+
+			const fakeNewConversation = {
+				createdAt: new Date(),
+				messages: [],
+				partner: partner,
+				participants: [user, partner],
+			};
+
+			setConversations({
+				...conversations,
+				[partner]: fakeNewConversation,
+			});
+		}
+	};
+
+	const handleKeyDown = (e) => {
+		if (e.key === "Enter") {
+			onSearch();
+		}
+	};
+
+	const handleChangeInput = (e) => {
+		setSearchValue(e.target.value);
+	};
+
+	const clearInput = () => {
+		setSearchValue("");
+	};
+
 	return (
 		<>
+			{error && (
+				<div className="absolute top-16 left-[50%] translate-x-[-50%] px-6 py-3 mt-2 text-center text-sm bg-red-400 text-white rounded-lg opacity-90">
+					{error}
+				</div>
+			)}
 			{/* HEADER */}
 			<div className="flex items-center justify-between w-full">
 				<span className="text-[1.05rem]">Active Users</span>
@@ -15,7 +86,9 @@ export default function Sidebar({ conversations, selectedIndex, setSelectedIndex
 			{/* ONLINE USERS LIST */}
 			<div className="flex items-center justify-start gap-4">
 				<OnlineUsers
-					users={Object.entries(conversations)?.map(([key, conv]) => conv.partner)}
+					users={Object.entries(conversations)?.map(
+						([key, conv]) => conv.partner
+					)}
 				/>
 			</div>
 
@@ -25,6 +98,9 @@ export default function Sidebar({ conversations, selectedIndex, setSelectedIndex
 					type="text"
 					placeholder="Search or start new chat"
 					className="px-10 py-2 rounded-badge focus:outline-0 w-full bg-[#E8ECEF] text-sm max-w-[100%] truncate"
+					value={searchValue}
+					onChange={handleChangeInput}
+					onKeyDown={handleKeyDown}
 				/>
 
 				<LuSearch size={17} className="absolute ml-3" />

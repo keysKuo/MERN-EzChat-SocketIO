@@ -15,7 +15,9 @@ class UserController {
 
 	static async getHistoryConversations(req, res, next) {
 		const userId = req.user._id;
-		const metadata = await ConversationService.getHistoryConversations({userId});
+		const metadata = await ConversationService.getHistoryConversations({
+			userId,
+		});
 		return new SuccessResponse({
 			code: 200,
 			message: `✔️ Found ${metadata.length} Conversations`,
@@ -25,11 +27,21 @@ class UserController {
 
 	static async getHistoryConversations_v2(req, res, next) {
 		const userId = req.user._id;
-		const metadata = await ConversationService.getHistoryConversations_v2({userId});
+		const metadata = await ConversationService.getHistoryConversations_v2({
+			userId,
+		});
 		return new SuccessResponse({
 			code: 200,
 			message: `✔️ Found Conversations`,
 			metadata,
+		}).send({ response: res });
+	}
+
+	static async searchUserByEmail(req, res, next) {
+		return new SuccessResponse({
+			code: 200,
+			message: "✔️ Found User",
+			metadata: await UserService.searchUserByEmail({ ...req.body, userId: req.user._id }),
 		}).send({ response: res });
 	}
 }

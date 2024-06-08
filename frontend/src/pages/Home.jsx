@@ -81,6 +81,7 @@ export default function HomePage() {
 							conversations={conversations}
 							selectedIndex={selectedIndex}
 							setSelectedIndex={setSelectedIndex}
+							setConversations={setConversations}
 						/>
 					</div>
 
