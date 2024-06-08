@@ -8,6 +8,7 @@ import { useAPI } from "../hooks";
 import { useAuthContext } from "../contexts/AuthProvider";
 import { useSocketContext } from "../contexts/SocketProvider";
 import notificationSound from '../assets/notification.mp3';
+import classNames from "classnames";
 
 export default function HomePage() {
 	// Contexts
@@ -70,8 +71,11 @@ export default function HomePage() {
 				<div className="flex sm:flex-row flex-col items-center justify-between h-[60dvh] w-[80%]">
 					{/* ACTIVE USERS SIDEBAR */}
 					<div
-						className="xl:w-[30%] sm:w-[40%] w-[100%] min-h-[60dvh] 
-                    max-h-[60dvh] flex flex-col items-start justify-start p-8 bg-[#F5F6F6] shadow-messagebox gap-4"
+						className={classNames({
+							"xl:w-[30%] sm:w-[40%] w-[100%] min-h-[70dvh] max-h-[70dvh] p-8 bg-[#F5F6F6] shadow-messagebox ": true,
+							"flex flex-col items-start justify-start gap-4": true,
+							"sm:flex hidden": selectedIndex
+						})}
 					>
 						<Sidebar
 							conversations={conversations}
@@ -82,7 +86,7 @@ export default function HomePage() {
 
 					{selectedIndex === null ? (
 						<>
-							<div className="2xl:w-[70%] sm:w-[80%] min-h-[60dvh] max-h-[60dvh] flex flex-col items-center justify-center shadow-messagebox">
+							<div className="2xl:w-[70%] sm:w-[80%] min-h-[70dvh] max-h-[70dvh] sm:flex hidden flex-col items-center justify-center shadow-messagebox">
 								<img
 									className="w-72"
 									src="/logo_2.png"
@@ -93,16 +97,21 @@ export default function HomePage() {
 					) : (
 						<>
 							{/* CHATBOX MESSAGES */}
-							<div className="2xl:w-[47%] sm:w-[80%] min-h-[60dvh] max-h-[60dvh] flex flex-col items-center justify-center shadow-messagebox">
+							<div className={classNames({
+								"2xl:w-[47%] sm:w-[80%] w-[100%] min-h-[70dvh] max-h-[70dvh] shadow-messagebox": true,
+								"flex flex-col items-center justify-center": true,
+								"hidden": !selectedIndex
+							})}>
 								<MessageBox
 									conversations={conversations}
 									selectedIndex={selectedIndex}
 									setConversations={setConversations}
+									setSelectedIndex={setSelectedIndex}
 								/>
 							</div>
 
 							{/* USER CONTACT INFORMATION */}
-							<div className="w-[20%] min-h-[60dvh] max-h-[60dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
+							<div className="w-[20%] min-h-[70dvh] max-h-[70dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
 								<ContactInfo
 									conversations={conversations}
 									selectedIndex={selectedIndex}

@@ -35,7 +35,7 @@ export default function Conversation({
 				</div>
 			</div>
 
-			<div className="w-[80%] flex flex-col items-start justify-center">
+			<div className="lg:w-[80%] w-[70%] flex flex-col items-start justify-center">
 				<div className="flex items-center justify-between w-full">
 					<span className="font-bold">
 						{conversation?.partner?.username}

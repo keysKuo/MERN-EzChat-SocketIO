@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+	LuArrowBigLeft,
+	LuLogOut,
 	LuMoreHorizontal,
 	LuPhone,
 	LuSend,
@@ -13,7 +15,7 @@ import { useAuthContext } from "../../../contexts/AuthProvider";
 import { useSocketContext } from "../../../contexts/SocketProvider";
 
 
-export default function MessageBox({ conversations, selectedIndex, setConversations }) {
+export default function MessageBox({ conversations, selectedIndex, setSelectedIndex, setConversations }) {
 	const chatBoxRef = useRef(null);
 	const { user, setUser } = useAuthContext();
 	const { fetch, loading, error } = useAPI();
@@ -115,6 +117,11 @@ export default function MessageBox({ conversations, selectedIndex, setConversati
 					</div>
 					<div className="p-2 rounded-full hover:bg-[#E8ECEF] cursor-pointer ">
 						<LuMoreHorizontal size={20} />
+					</div>
+					<div onClick={() => {
+						setSelectedIndex(null)
+					}} className="p-2 rounded-full hover:bg-[#E8ECEF] text-red-400 cursor-pointer ">
+						<LuLogOut size={20} />
 					</div>
 				</div>
 			</div>

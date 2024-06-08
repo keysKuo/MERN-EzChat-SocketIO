@@ -21,11 +21,11 @@ export default function Sidebar({ conversations, selectedIndex, setSelectedIndex
 			</div>
 
 			{/* SEARCH INPUT */}
-			<div className="flex items-center justify-start w-[90%] text-gray-500 my-3">
+			<div className="flex items-center justify-start w-[100%] text-gray-500 my-3">
 				<input
 					type="text"
 					placeholder="Search or start new chat"
-					className="px-10 py-2 rounded-badge focus:outline-0 w-full bg-[#E8ECEF] text-sm"
+					className="px-10 py-2 rounded-badge focus:outline-0 w-full bg-[#E8ECEF] text-sm max-w-[100%] truncate"
 				/>
 
 				<LuSearch size={17} className="absolute ml-3" />

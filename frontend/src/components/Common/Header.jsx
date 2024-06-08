@@ -36,14 +36,14 @@ export default function Header() {
 	return (
 		<header
 			className="w-full h-[4.5rem] bg-main px-8
-            flex items-center 
+            flex items-center justify-between
             fixed top-0 z-10
             border-b-1 border-slate-500 shadow-messagebox"
 		>
-			<div className="flex items-center h-[100%] ml-10">
+			<div className="flex items-center h-[100%] sm:ml-12 ml-0">
 				<a
 					href="/"
-					className="flex items-center justify-center w-[30%]"
+					className="flex items-center justify-center w-36"
 				>
 					<img src={logo_url} className="w-[50%]" />
 				</a>
@@ -62,7 +62,7 @@ export default function Header() {
 								<div
 									tabIndex={0}
 									role="button"
-									className="flex flex-row px-4 rounded-badge gap-1 text-sm text-center items-center leading-10 font-bold bg-[#ccc] hover:bg-[#71B190]"
+									className="flex flex-row py-2 w-32 rounded-badge gap-1 text-sm text-center items-center justify-center font-bold bg-[#ccc] hover:bg-[#71B190]"
 								>
 									{user.username} <LuChevronDown size={16} />
 								</div>
