@@ -66,6 +66,7 @@ class AuthService {
 		return delkey;
     }
 
+
 	static async signUp({ username, email, password, confirmPassword, gender }) {
 		// Check existed User
 		const existedUser = await userModel.countDocuments({ email });
@@ -76,8 +77,9 @@ class AuthService {
 			throw new BadRequestError(`❌ Password and Confirm Password must be same`);
 
 		// Insert User to DB
-		const maleAvatar = `${configs['frontendURL']}/male-avatar.png`;
-		const femaleAvatar = `${configs['frontendURL']}/female-avatar.png`;
+		const random = Math.floor(Math.random() * 4) + 1;
+		const maleAvatar = `${configs['frontendURL']}/male-avatar${random}.jpg`;
+		const femaleAvatar = `${configs['frontendURL']}/female-avatar${random}.jpg`;
 		const passwordHash = await bcrypt.hash(password, 10);
 		const newUser = await userModel.create({
 			username,
