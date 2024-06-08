@@ -17,7 +17,7 @@ class MessageService {
 
         // SEND SOCKET
         const receiverSocketId = getReceiverSocketId(receiverId);
-        if (receiverId) {
+        if (receiverSocketId) {
             io.to(receiverSocketId).emit("newMessage", newMessage);
         }
 

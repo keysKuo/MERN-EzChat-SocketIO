@@ -6,11 +6,12 @@ import { useSocketContext } from "../../../contexts/SocketProvider";
 export default function Conversation({
 	conversation,
 	active = false,
+	shouldShake,
 	...props
 }) {
 	const { onlineUsers } = useSocketContext();
 	const userStatus = onlineUsers.includes(conversation?.partner?._id) ? 'online' : 'offline'
-
+	
 	const formattedCreatedAt = formatTimestamp(
 		conversation?.messages[conversation.messages.length - 1]?.createdAt
 	).split("-");
@@ -25,6 +26,7 @@ export default function Conversation({
 			className={classNames({
 				"chat-item flex items-center justify-between gap-3 w-full px-4 py-2 cursor-pointer": true,
 				"bg-[#E8ECEF]": active,
+				"shake": shouldShake
 			})}
 		>
 			<div className="flex items-center">

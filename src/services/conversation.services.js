@@ -2,24 +2,45 @@ const mongoose = require("mongoose");
 const conversationModel = require("../models/conversation.model");
 
 class ConversationService {
-	static async setUpConversation({ senderId, receiverId, message }) {
+	static async setUpConversation({ senderId, receiverId, message = "" }) {
 		const filter = {
 			$or: [
 				{ participants: [senderId, receiverId] },
 				{ participants: [receiverId, senderId] },
 			],
 		};
-		const update = {
-			$set: { participants: [senderId, receiverId] },
-			$push: message && { messages: message },
-		};
+		const update = message
+			? {
+					$set: { participants: [senderId, receiverId] },
+					$push: { messages: message },
+			  }
+			: {
+					$set: { participants: [senderId, receiverId] },
+			  };
+			  
 		const options = { upsert: true, new: true };
 
-		return await conversationModel.findOneAndUpdate(
-			filter,
-			update,
-			options
-		);
+		return await conversationModel
+			.findOneAndUpdate(filter, update, options)
+			.populate({
+				path: "messages",
+				options: {
+					limit: 50,
+					sort: { createdAt: -1 },
+					select: "message sender receiver createdAt",
+				},
+			})
+			.populate({ path: "participants", select: "-password" })
+			.lean()
+			.then((conv) => {
+				return {
+					...conv,
+					partner: conv.participants.filter(
+						(p) => p._id.toString() !== senderId.toString()
+					)[0],
+					messages: conv.messages.reverse(),
+				};
+			});
 	}
 
 	static async getConversation({ participants }) {
@@ -76,7 +97,7 @@ class ConversationService {
 			.lean()
 			.then((conversations) => {
 				const conversationMap = {};
-				
+
 				conversations.forEach((conv) => {
 					let partner = conv.participants.filter(
 						(p) => p._id.toString() !== userId.toString()

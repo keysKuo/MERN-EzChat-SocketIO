@@ -52,13 +52,28 @@ export default function HomePage() {
 			newMessage.shouldShake = true;
 			const sound = new Audio(notificationSound);
 			sound.play();
-			let updatedCoversations = {...conversations};
-			updatedCoversations[newMessage.sender].messages.push(newMessage);
-			setConversations({...updatedCoversations});
+
+			let updatedConversations = JSON.parse(JSON.stringify(conversations));
+			updatedConversations[newMessage.sender].messages.push(newMessage);
+			setConversations({...updatedConversations});
+			// setSelectedIndex(newMessage.sender);
 		})
 
-		return () => socket?.off("newMessage");
-	}, [socket, conversations, setConversations])
+		socket?.on("newConversation", newConversation => {
+			newConversation.shouldShake = true;
+			const sound = new Audio(notificationSound);
+			sound.play();
+
+			const reversePartner = { ...newConversation, partner: newConversation.participants[0]}
+			setConversations({...conversations, [newConversation.participants[0]._id]: reversePartner });
+			// setSelectedIndex(newConversation.participants[0]);
+		})
+
+		return () => {
+			socket?.off("newMessage");
+			socket?.off("newConversation");
+		}
+	}, [socket, conversations, setConversations, selectedIndex, setSelectedIndex])
 
 	
 	return (

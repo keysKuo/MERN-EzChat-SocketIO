@@ -16,9 +16,11 @@ export default function Sidebar({
 	const [searchValue, setSearchValue] = useState("");
 	const { fetch, loading, error } = useAPI();
 	const { user } = useAuthContext();
+
+
 	const onSearch = async () => {
 		const options = {
-			url: configDev.API_URL + `/users/search`,
+			url: configDev.API_URL + `/users/setup`,
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -33,25 +35,18 @@ export default function Sidebar({
 		clearInput();
 		const result = await fetch(options);
 		if (result) {
-			// console.log(result);
-			const partner = result.metadata;
-			const partnerList = Object.entries(conversations).map(([key,conv]) => conv.partner);
-			
-			if (partnerList.find(p => p._id.toString() === partner._id.toString())) {
-				setSelectedIndex(partner._id);
+			const metaConversation = result.metadata;
+			const partnerList = Object.entries(conversations).map(([key,conv]) => key);
+
+			// If conversation was created before, focus to that conversation
+			if (partnerList.includes(metaConversation.partner._id)) {
+				setSelectedIndex(metaConversation.partner._id);
 				return;
 			}
 
-			const fakeNewConversation = {
-				createdAt: new Date(),
-				messages: [],
-				partner: partner,
-				participants: [user, partner],
-			};
-
 			setConversations({
 				...conversations,
-				[partner]: fakeNewConversation,
+				metaConversation
 			});
 		}
 	};
@@ -120,6 +115,7 @@ export default function Sidebar({
 								onClick={() => {
 									setSelectedIndex(key);
 								}}
+								shouldShake={conv.shouldShake}
 							/>
 						);
 					})}

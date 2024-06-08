@@ -14,4 +14,6 @@ router.get('/history_v2', catchAsync(UserController.getHistoryConversations_v2))
 
 router.post('/search', catchAsync(UserController.searchUserByEmail));
 
+router.post('/setup', catchAsync(UserController.setUpConversation));
+
 module.exports = router;

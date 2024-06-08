@@ -41,7 +41,21 @@ class UserController {
 		return new SuccessResponse({
 			code: 200,
 			message: "✔️ Found User",
-			metadata: await UserService.searchUserByEmail({ ...req.body, userId: req.user._id }),
+			metadata: await UserService.searchUserByEmail({
+				...req.body,
+				userId: req.user._id,
+			}),
+		}).send({ response: res });
+	}
+
+	static async setUpConversation(req, res, next) {
+		return new SuccessResponse({
+			code: 201,
+			message: "✔️ Conversation setup successfully",
+			metadata: await UserService.setUpConversation({
+				...req.body,
+				userId: req.user._id,
+			}),
 		}).send({ response: res });
 	}
 }

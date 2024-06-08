@@ -27,8 +27,9 @@ export default function MessageBox({ conversations, selectedIndex, setSelectedIn
 	const userStatus = onlineUsers.includes(conversations[selectedIndex].partner?._id) ? 'online' : 'offline'
 	const [visiblePicker, setVisiblePicker] = useState(false);
 
-	useEffect(() => {
-	}, [conversations, setConversations]);
+	// useEffect(() => {
+
+	// }, [conversations, selectedIndex, setConversations, setSelectedIndex])
 
 	// Tự cuộn xuống cuối mỗi khi messages thay đổi
 	useEffect(() => {
@@ -76,9 +77,9 @@ export default function MessageBox({ conversations, selectedIndex, setSelectedIn
 		const result = await fetch(options);
 		if (result) {
 			const newMessage = result.metadata;
-			let updatedCoversations = {...conversations};
-			updatedCoversations[newMessage.receiver].messages.push(newMessage);
-			setConversations({...updatedCoversations});
+			let updatedConversations = JSON.parse(JSON.stringify(conversations));
+			updatedConversations[selectedIndex].messages.push(newMessage);
+			setConversations({...updatedConversations});
 		}
 	};
 
