@@ -11,7 +11,7 @@ const production = {
 
 const configs = { dev, production };
 const env = import.meta.env.VITE_NODE_ENV?.trim() || 'dev';
-console.log(configs[env]);
+console.log(import.meta.env.VITE_NODE_ENV);
 export default configs[env];
 
 
