@@ -13,6 +13,9 @@ import { useAPI } from "../../../hooks";
 import configDev from "../../../configs/config.dev";
 import { useAuthContext } from "../../../contexts/AuthProvider";
 import { useSocketContext } from "../../../contexts/SocketProvider";
+import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data';
+import classNames from "classnames";
 
 
 export default function MessageBox({ conversations, selectedIndex, setSelectedIndex, setConversations }) {
@@ -22,6 +25,7 @@ export default function MessageBox({ conversations, selectedIndex, setSelectedIn
 	const [input, setInput] = useState("");
 	const { onlineUsers } = useSocketContext();
 	const userStatus = onlineUsers.includes(conversations[selectedIndex].partner?._id) ? 'online' : 'offline'
+	const [visiblePicker, setVisiblePicker] = useState(false);
 
 	useEffect(() => {
 	}, [conversations, setConversations]);
@@ -80,6 +84,7 @@ export default function MessageBox({ conversations, selectedIndex, setSelectedIn
 
 	const clearInput = () => {
 		setInput("");
+		setVisiblePicker(false);
 	};
 
 	return (
@@ -172,7 +177,25 @@ export default function MessageBox({ conversations, selectedIndex, setSelectedIn
 						onKeyDown={handleKeyDown}
 					/>
 
+					<div className={classNames({
+						"hidden": !visiblePicker,
+						"fixed z-[100] bottom-[24dvh]": visiblePicker
+					})}>
+						<Picker
+							data={data}
+							previewPosition="none"
+							onEmojiSelect={(e) => {
+								setInput((prev) => prev + e.native)
+								setVisiblePicker((prev) => !prev);
+							}}
+							theme={'light'}
+						/>
+					</div>
+
 					<LuSmile
+						onClick={() => {
+							setVisiblePicker((prev) => !prev)
+						}}
 						size={26}
 						className="absolute ml-4 cursor-pointer"
 					/>

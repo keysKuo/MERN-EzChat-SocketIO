@@ -4,7 +4,6 @@ import ChatInfo from "./ChatInfo";
 import OnlineUsers from "./OnlineUsers";
 
 export default function Sidebar({ conversations, selectedIndex, setSelectedIndex }) {
-	console.log(conversations)
 	return (
 		<>
 			{/* HEADER */}
