@@ -13,7 +13,7 @@ services:
     volumes:
       - ./frontend/.env:/frontend/.env
     env_file:
-      - .env
+      - /frontend/.env
     environment:
       - VITE_NODE_ENV=production
       - VITE_SOCKET_URL=https://ezticket.io.vn
