@@ -37,4 +37,4 @@ jobs:
      
     - name: Deploy with Docker Compose
       run: |
-        ssh -o StrictHostKeyChecking=no nkeyskuo@14.225.192.64 "cd /var/www/ezchat && git checkout -b socket && git reset --hard && git pull && docker-compose down && docker-compose up --build -d"
+        ssh -o StrictHostKeyChecking=no nkeyskuo@14.225.192.64 "cd /var/www/ezchat && git checkout -b socket && git reset --hard && git pull origin socket && docker-compose down && docker-compose up --build -d"
