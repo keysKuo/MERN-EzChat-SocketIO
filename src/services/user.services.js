@@ -31,8 +31,10 @@ class UserService {
 		
 		// SEND SOCKET
         const receiverSocketId = getReceiverSocketId(receiver._id);
+        const senderSocketId = getReceiverSocketId(userId);
         if (receiverSocketId) {
             io.to(receiverSocketId).emit("newConversation", conversation);
+            io.to(senderSocketId).emit("newConversation", conversation);
         }
 
 		return conversation;

@@ -23,28 +23,28 @@ export default function HomePage() {
 	const { fetch, loading, error } = useAPI();
 
 	// Load Conversations from Backend
-	useEffect(() => {
-		const LoadConversations = async () => {
-			const options = {
-				url: configDev.API_URL + `/users/history_v2`,
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					"x-client-id": user._id,
-				},
-				withCredentials: true,
-			};
-
-			const result = await fetch(options);
-			if (result) {
-				// console.log(result);
-				setConversations({...result?.metadata});
-			}
-			// console.log(error)
+	const LoadConversations = async () => {
+		const options = {
+			url: configDev.API_URL + `/users/history_v2`,
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"x-client-id": user._id,
+			},
+			withCredentials: true,
 		};
 
+		const result = await fetch(options);
+		if (result) {
+			// console.log(result);
+			setConversations({...result?.metadata});
+		}
+		// console.log(error)
+	};
+
+	useEffect(() => {
 		LoadConversations();
-	}, [setConversations]);
+	}, []);
 
 	// Listen Send message
 	useEffect(() => {
@@ -56,7 +56,6 @@ export default function HomePage() {
 			let updatedConversations = JSON.parse(JSON.stringify(conversations));
 			updatedConversations[newMessage.sender].messages.push(newMessage);
 			setConversations({...updatedConversations});
-			// setSelectedIndex(newMessage.sender);
 		})
 
 		socket?.on("newConversation", newConversation => {
@@ -64,9 +63,7 @@ export default function HomePage() {
 			const sound = new Audio(notificationSound);
 			sound.play();
 
-			const reversePartner = { ...newConversation, partner: newConversation.participants[0]}
-			setConversations({...conversations, [newConversation.participants[0]._id]: reversePartner });
-			// setSelectedIndex(newConversation.participants[0]);
+			LoadConversations();
 		})
 
 		return () => {
@@ -78,12 +75,14 @@ export default function HomePage() {
 	
 	return (
 		<>
-			{loading ? (
+			{/* {loading ? (
 				<>
 					<span className="loading loading-infinity w-52 text-primary"></span>
 				</>
 			) : (
-				<div className="flex sm:flex-row flex-col items-center justify-between h-[60dvh] w-[80%]">
+				
+			)} */}
+			<div className="flex sm:flex-row flex-col items-center justify-between h-[60dvh] w-[80%]">
 					{/* ACTIVE USERS SIDEBAR */}
 					<div
 						className={classNames({
@@ -137,7 +136,6 @@ export default function HomePage() {
 						</>
 					)}
 				</div>
-			)}
 		</>
 	);
 }
