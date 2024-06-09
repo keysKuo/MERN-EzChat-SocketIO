@@ -1,14 +1,7 @@
-<h3 align="center">
-    <img width="280" alt="..." src="https://ezticket.io.vn/logo.png" >
-</h3>
-
-
+<h3 align="center"><img width="700" style="border-radius:5px;" alt="screenshot" src="https://ezticket.io.vn/demo.jpg"></h3>
 <p align="center">
     <a href="https://ezticket.io.vn/"><strong>« LIVE DEMO »</strong></a>
 </p>
-
-<h3 align="center"><img width="700" style="border-radius:5px;" alt="screenshot" src="https://ezticket.io.vn/demo.jpg"></h3>
-
 <br/>
 
 ## EzChat
