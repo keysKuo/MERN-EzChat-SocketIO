@@ -43,7 +43,7 @@ export default function Header() {
 			<div className="flex items-center h-[100%] sm:ml-12 ml-0">
 				<a
 					href="/"
-					className="flex items-center justify-center w-36"
+					className="flex items-center justify-start w-36"
 				>
 					<img src={logo_url} className="w-[50%]" />
 				</a>

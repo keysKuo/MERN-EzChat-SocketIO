@@ -94,11 +94,11 @@ export default function HomePage() {
 			) : (
 				
 			)} */}
-			<div className="flex sm:flex-row flex-col items-center justify-between h-[60dvh] lg:w-[80%] w-[100%]">
+			<div className="flex sm:flex-row flex-col items-center justify-between h-[80dvh] lg:w-[80%] w-[100%] mt-[4.5rem]">
 				{/* ACTIVE USERS SIDEBAR */}
 				<div
 					className={classNames({
-						"xl:w-[30%] sm:w-[40%] w-[100%] min-h-[70dvh] max-h-[70dvh] p-8 bg-[#F5F6F6] shadow-messagebox": true,
+						"xl:w-[30%] sm:w-[40%] w-[100%] chat-container p-8 bg-[#F5F6F6] shadow-messagebox": true,
 						"flex flex-col items-start justify-start gap-4": true,
 						"sm:flex hidden": selectedIndex,
 					})}
@@ -113,7 +113,7 @@ export default function HomePage() {
 
 				{selectedIndex === null ? (
 					<>
-						<div className="2xl:w-[70%] sm:w-[80%] min-h-[70dvh] max-h-[70dvh] sm:flex hidden flex-col items-center justify-center shadow-messagebox">
+						<div className="2xl:w-[70%] sm:w-[80%] chat-container sm:flex hidden flex-col items-center justify-center shadow-messagebox">
 							<img className="w-72" src="/logo_2.png" alt="" />
 						</div>
 					</>
@@ -122,7 +122,7 @@ export default function HomePage() {
 						{/* CHATBOX MESSAGES */}
 						<div
 							className={classNames({
-								"2xl:w-[47%] sm:w-[80%] w-[100%] min-h-[70dvh] max-h-[70dvh] shadow-messagebox": true,
+								"2xl:w-[47%] sm:w-[80%] w-[100%] chat-container shadow-messagebox": true,
 								"flex flex-col items-center justify-center": true,
 								hidden: !selectedIndex,
 							})}
@@ -136,7 +136,7 @@ export default function HomePage() {
 						</div>
 
 						{/* USER CONTACT INFORMATION */}
-						<div className="w-[20%] min-h-[70dvh] max-h-[70dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
+						<div className="w-[20%] chat-container 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
 							<ContactInfo
 								conversations={conversations}
 								selectedIndex={selectedIndex}
