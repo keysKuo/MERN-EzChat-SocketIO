@@ -42,7 +42,7 @@ export default function Conversation({
 					<span className="font-bold">
 						{conversation?.partner?.username}
 					</span>
-					<span className="text-gray-400 text-xs lg:flex hidden">{formatTime}</span>
+					<span className="text-gray-400 text-xs">{formatTime}</span>
 				</div>
 
 				<div className="max-w-[90%] truncate">

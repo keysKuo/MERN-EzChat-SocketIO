@@ -94,7 +94,7 @@ export default function HomePage() {
 			) : (
 				
 			)} */}
-			<div className="flex sm:flex-row flex-col items-center justify-between h-[60dvh] w-[80%]">
+			<div className="flex sm:flex-row flex-col items-center justify-between h-[60dvh] lg:w-[80%] w-[100%]">
 				{/* ACTIVE USERS SIDEBAR */}
 				<div
 					className={classNames({
