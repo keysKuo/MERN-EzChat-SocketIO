@@ -1,5 +1,5 @@
 <h3 align="center">
-    <img width="280" alt="..." src="https://ezticket.io.vn/logo_2.png" >
+    <img width="280" alt="..." src="https://ezticket.io.vn/logo.png" >
 </h3>
 
 
