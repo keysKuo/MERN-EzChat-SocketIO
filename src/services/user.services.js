@@ -20,25 +20,6 @@ class UserService {
 		if (!searchUser) throw new FileNotFoundError('❌ User Not Found');
 		return searchUser;
 	}
-
-	static async setUpConversation({ email, userId }) {
-		const receiver = await this.searchUserByEmail({ email, userId });
-		const conversation = await ConversationService.setUpConversation({
-			senderId: userId,
-			receiverId: receiver._id
-		})
-		if (!conversation) throw new ForbiddenError("❌ Setup conversation error");
-		
-		// SEND SOCKET
-        const receiverSocketId = getReceiverSocketId(receiver._id);
-        const senderSocketId = getReceiverSocketId(userId);
-        if (receiverSocketId) {
-            io.to(receiverSocketId).emit("newConversation", conversation);
-            io.to(senderSocketId).emit("newConversation", conversation);
-        }
-
-		return conversation;
-	}
 }
 
 module.exports = UserService;

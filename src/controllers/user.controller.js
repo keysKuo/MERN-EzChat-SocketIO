@@ -47,17 +47,6 @@ class UserController {
 			}),
 		}).send({ response: res });
 	}
-
-	static async setUpConversation(req, res, next) {
-		return new SuccessResponse({
-			code: 201,
-			message: "✔️ Conversation setup successfully",
-			metadata: await UserService.setUpConversation({
-				...req.body,
-				userId: req.user._id,
-			}),
-		}).send({ response: res });
-	}
 }
 
 module.exports = UserController;

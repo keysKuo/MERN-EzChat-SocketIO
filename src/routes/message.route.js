@@ -8,5 +8,6 @@ router.use(catchAsync(verifyAuth));
 
 router.post('/send/:receiverId', catchAsync(MessageController.sendMessage));
 router.get('/chat/:targetId', catchAsync(MessageController.getMessages));
+router.post('/setup', catchAsync(MessageController.setUpConversation));
 
 module.exports = router;
