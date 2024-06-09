@@ -98,10 +98,9 @@ export default function Sidebar({
 			</div>
 
 			{/* COVERSATIONS LIST */}
-			<div className="flex flex-col item-center justify-between w-full gap-3">
-				<span className="text-[1rem] px-4">ALL CHATS</span>
+			<div className="chat-list flex flex-col item-center justify-between w-full gap-3 overflow-y-scroll">
 
-				<div className="chat-list flex flex-col items-start justify-center w-full gap-2 overflow-y-scroll">
+				<div className="flex flex-col items-start justify-center w-full gap-2">
 					{Object.entries(conversations)?.map(([key, conv]) => {
 						return (
 							<ChatInfo

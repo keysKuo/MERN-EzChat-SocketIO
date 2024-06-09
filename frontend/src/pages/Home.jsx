@@ -98,7 +98,7 @@ export default function HomePage() {
 				{/* ACTIVE USERS SIDEBAR */}
 				<div
 					className={classNames({
-						"xl:w-[30%] sm:w-[40%] w-[100%] min-h-[70dvh] max-h-[70dvh] p-8 bg-[#F5F6F6] shadow-messagebox ": true,
+						"xl:w-[30%] sm:w-[40%] w-[100%] min-h-[70dvh] max-h-[70dvh] p-8 bg-[#F5F6F6] shadow-messagebox": true,
 						"flex flex-col items-start justify-start gap-4": true,
 						"sm:flex hidden": selectedIndex,
 					})}
