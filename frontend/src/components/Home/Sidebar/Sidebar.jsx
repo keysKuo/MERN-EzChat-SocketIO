@@ -20,7 +20,7 @@ export default function Sidebar({
 
 	const onSearch = async () => {
 		const options = {
-			url: configDev.API_URL + `/users/setup`,
+			url: configDev.API_URL + `/messages/setup`,
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -36,18 +36,14 @@ export default function Sidebar({
 		const result = await fetch(options);
 		if (result) {
 			const metaConversation = result.metadata;
-			const partnerList = Object.entries(conversations).map(([key,conv]) => key);
-
-			// If conversation was created before, focus to that conversation
-			if (partnerList.includes(metaConversation.partner._id)) {
-				setSelectedIndex(metaConversation.partner._id);
-				return;
-			}
+			// console.log(metaConversation);
 
 			setConversations({
 				...conversations,
-				metaConversation
+				[metaConversation._id]: metaConversation
 			});
+			setSelectedIndex(metaConversation?._id)
+			// setSelectedIndex(metaConversation.partner._id)
 		}
 	};
 

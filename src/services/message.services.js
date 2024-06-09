@@ -5,29 +5,33 @@ const ConversationService = require('./conversation.services');
 const UserService = require('./user.services');
 
 class MessageService {
-    static async sendMessage({ senderId, receiverId, message}) {
+    static async sendMessage({ senderId, receiverId, message, conversationId }) {
+        // CHECK IF CONVERSATION EXISTED
+        const isExistedConv = await ConversationService.isExisted({conversationId});
+        if (!isExistedConv) throw new FileNotFoundError("❌ Conversation Not Existed");
+
+        // CREATE NEW MESSAGE
         const newMessage = await messageModel.create({
             sender: senderId,
             receiver: receiverId,
-            message
+            message,
+            conversation: conversationId
         });
         if (!newMessage) throw new ForbiddenError('❌ Send Message Error');
 
-        const conversation = await ConversationService.setUpConversation({ senderId, receiverId, message: newMessage._id});
-        if (!conversation) throw new FileNotFoundError('❌ Conversation Not Found');
+        // PUSH NEW MESSAGES TO MESSAGES LIST IN CONVERSATION
+        await ConversationService.updateConversation({
+            conversationId,
+            payload: { $push: { messages: newMessage._id }}
+        })
 
-        // SEND SOCKET
+        // SEND SOCKET NOTIFICATION TO RECEIVER
         const receiverSocketId = getReceiverSocketId(receiverId);
         if (receiverSocketId) {
             io.to(receiverSocketId).emit("newMessage", newMessage);
         }
 
         return newMessage;
-    }
-
-    static async getMessages({ participants }) {
-        const conversation = await ConversationService.getConversation({participants});
-        return conversation?.messages || [];
     }
 
     static async setUpConversation({ email, userId }) {

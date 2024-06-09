@@ -12,7 +12,7 @@ export default function Message({
 	return (
 		<>
 			<div
-				className={`message-${type} flex flex-col items-start gap-2 my-2 max-w-[40%]`}
+				className={`message-${type} flex flex-col items-start gap-2 my-2 lg:max-w-[40%] max-w-[54%]`}
 			>
 				<div
 					className={classNames({
