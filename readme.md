@@ -1,12 +1,12 @@
+## About this project
+
+Welcome to EzChat, the ultimate solution for seamless and secure communication. Whether you're connecting with friends, family, or colleagues, EzChat provides a rich set of features designed to enhance your messaging experience.
+
 <h3 align="center"><img width="700" style="border-radius:5px;" alt="screenshot" src="https://ezticket.io.vn/demo.jpg"></h3>
 <p align="center">
     <a href="https://ezticket.io.vn/"><strong>« LIVE DEMO »</strong></a>
 </p>
 <br/>
-
-## EzChat
-
-Welcome to EzChat, the ultimate solution for seamless and secure communication. Whether you're connecting with friends, family, or colleagues, EzChat provides a rich set of features designed to enhance your messaging experience.
 
 <br/>
 
