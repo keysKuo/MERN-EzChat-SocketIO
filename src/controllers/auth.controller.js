@@ -9,6 +9,7 @@ class AuthController {
 	 * @param   {String} username
 	 * @param   {String} email
 	 * @param   {String} password
+	 * @param   {String} confirmPassword
 	 * @param   {String} gender
 	 * @return  {JSON} user, accessToken, refreshToken
 	 */

@@ -1,27 +1,25 @@
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Navigate, createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ClientRoot } from "./layouts";
 import { HomePage, SignInPage, SignUpPage } from "./pages";
-import AuthProvider from "./contexts/AuthProvider";
-
-const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <ClientRoot />,
-		children: [
-			{ path: "/", element: <HomePage /> },
-			{ path: "/login", element: <SignInPage /> },
-			{ path: "/signUp", element: <SignUpPage /> },
-		],
-	},
-]);
+import { useAuthContext } from "./contexts/AuthProvider";
 
 function App() {
+	const { user, setUser } = useAuthContext();
+
 	return (
-		<AuthProvider>
-			<RouterProvider router={router} />
-		</AuthProvider>
+		<RouterProvider router={createBrowserRouter([
+			{
+				path: "/",
+				element: <ClientRoot />,
+				children: [
+					{ path: "/", element: user ? <HomePage /> : <Navigate to='/login' /> },
+					{ path: "/login", element: user ? <Navigate to="/" /> : <SignInPage /> },
+					{ path: "/register", element: user ? <Navigate  to="/" /> : <SignUpPage /> },
+				],
+			},
+		])} />
 	);
 }
 

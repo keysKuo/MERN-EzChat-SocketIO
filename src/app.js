@@ -1,20 +1,23 @@
-require("dotenv").config();
-
-const compression = require("compression");
 const express = require("express");
-const { default: helmet } = require("helmet");
-const morgan = require("morgan");
 const app = express();
+require("dotenv").config();
+const { default: helmet } = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
 const { checkOverload } = require("./helpers/check.connect");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
 const path = require("path");
+const configs = require("./configs");
 
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
-app.use(cors());
+app.use(cors({
+	origin: configs['frontendURL'],
+	credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -32,6 +35,11 @@ require("./dbs/init.mongodb"); // Singleton - A method or class that only constr
 checkOverload();
 
 app.use("/api/v1", require("./routes"));
+
+app.get('/static/:resource', (req, res, next) => {
+	const { resource } = req.params;
+	res.sendFile(path.join(__dirname, `public`, resource));
+})
 
 // init routers
 app.get("/", (req, res, next) => {

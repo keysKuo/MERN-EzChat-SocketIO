@@ -7,6 +7,7 @@ const userSchema = new Schema(
 		password: { type: String },
 		avatar: { type: String, required: true },
 		gender: { type: String, enum: ["male", "female"] },
+		status: { type: String, enum: ['online', 'offline'], default: 'offline'},
         googleId: { type: String }
 	},
 	{

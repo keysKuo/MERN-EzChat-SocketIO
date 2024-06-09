@@ -1,34 +1,42 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function useAPI(options) {
-   const [data, setData] = useState(null);
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState(null);
+export default function useAPI() {
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
 
-   useEffect(() => {
-      const fetchData = async () => {
-         await axios
-            .request(options)
-            .then((response) => {
-               const result = response.data;
-               if (result.success) {
-                  setData(result.metadata);
-               }
-            })
-            .catch((err) => {
-               const message = err?.response?.msg || "Error occured!";
-               setError(message);
-            })
-            .finally(() => {
-               setLoading(false);
-            });
-      };
+	const fetch = async (options) => {
+		if (options.data) {
+			var err = "";
+			Object.entries(options.data).forEach(([key, value]) => {
+				if (!value || value == "") {
+					err = "Error occured!";
+				}
+			});
 
-      fetchData();
+			if (err) {
+				setError(err);
+				return null;
+			}
+		}
 
-      return () => {};
-   }, [options]);
+		setLoading(true);
+		return await axios
+			.request(options)
+			.then((response) => response.data)
+			.then((result) => (result?.success ? result : null))
+			.catch((err) => {
+				console.log(err);
+				setError(err?.response?.data?.message || "Error occured!");
+				return null;
+			})
+			.finally(() => {
+				setTimeout(() => {
+					setLoading(false);
+					setError(null);
+				}, 1000);
+			});
+	};
 
-   return { data, loading, error };
+	return { fetch, loading, error };
 }

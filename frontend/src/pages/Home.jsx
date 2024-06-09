@@ -3,114 +3,148 @@ import React, { useContext, useEffect, useState } from "react";
 import MessageBox from "../components/Home/MessageBox/MessageBox";
 import Sidebar from "../components/Home/Sidebar/Sidebar";
 import ContactInfo from "../components/Home/ContactInfo/ContactInfo";
-import { AuthContext } from "../contexts/AuthProvider";
-import { useNavigate } from "react-router-dom";
-
-let fakeChat_1 = [
-	{
-		userId: 1,
-		message: "Hi there, how are you ?",
-		createdAt: `2024-06-04T12:10:54.440+00:00`,
-	},
-	{
-		userId: 2,
-		message: `Good, What's up Bro ?`,
-		createdAt: `2024-06-04T15:10:54.440+00:00`,
-	},
-	{
-		userId: 2,
-		message: "Hangout tonight ?",
-		createdAt: `2024-06-04T15:10:54.440+00:00`,
-	},
-	{
-		userId: 1,
-		message: "Sure, What time?",
-		createdAt: `2024-06-04T15:10:54.440+00:00`,
-	},
-];
-
-let fakeChat_2 = [
-	{
-		userId: 2,
-		message: "Will you go to my party ?",
-		createdAt: `2024-06-04T12:10:54.440+00:00`,
-	},
-	{
-		userId: 3,
-		message: `I don't know, will you?`,
-		createdAt: `2024-06-04T15:10:54.440+00:00`,
-	},
-];
-
-let fakeConversations = [
-	{
-		partner: {
-			userId: "1",
-			username: "Kryo Kuo",
-			avatar: "https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg",
-			status: "online",
-		},
-		lastMessage: {
-			message: `Sure, What time?`,
-			createdAt: `2024-06-04T15:10:54.440+00:00`,
-		},
-		messages: fakeChat_1,
-	},
-	{
-		partner: {
-			userId: "3",
-			username: "Serena Irr",
-			avatar: "https://img.freepik.com/free-photo/pretty-smiling-joyfully-female-with-fair-hair-dressed-casually-looking-with-satisfaction_176420-15187.jpg",
-			status: "offline",
-		},
-		lastMessage: {
-			message: `I don't know, will you?`,
-			createdAt: `2024-06-04T17:10:54.440+00:00`,
-		},
-		messages: fakeChat_2,
-	},
-];
+import configDev from "../configs/config.dev";
+import { useAPI } from "../hooks";
+import { useAuthContext } from "../contexts/AuthProvider";
+import { useSocketContext } from "../contexts/SocketProvider";
+import notificationSound from "../assets/notification.mp3";
+import classNames from "classnames";
 
 export default function HomePage() {
-	const { user, setUser } = useContext(AuthContext);
-	const [selectedIndex, setSelectedIndex] = useState(0);
-    const navigate = useNavigate();
-    // localStorage.clear();
+	// Contexts
+	const { user, setUser } = useAuthContext();
+	const { socket, onlineUsers } = useSocketContext();
 
-    useEffect(() => {
-		if (!user) {
-			navigate("/login");
-		}
-	}, [user]);
+	// States
+	const [selectedIndex, setSelectedIndex] = useState(null);
+	const [conversations, setConversations] = useState({});
+
+	// Hooks
+	const { fetch, loading, error } = useAPI();
+
+	useEffect(() => {
+		// Load Conversations History from Backend
+		const LoadConversations = async () => {
+			const options = {
+				url: configDev.API_URL + `/users/history_v2`,
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					"x-client-id": user._id,
+				},
+				withCredentials: true,
+			};
+
+			const result = await fetch(options);
+			if (result) {
+				// console.log(result);
+				setConversations({ ...result?.metadata });
+			}
+			// console.log(error)
+		};
+		LoadConversations();
+	}, []);
+
+	// Listen Send message
+	useEffect(() => {
+		socket?.on("newMessage", (newMessage) => {
+			newMessage.shouldShake = true;
+			const sound = new Audio(notificationSound);
+			sound.play();
+
+			let updatedConversations = JSON.parse(
+				JSON.stringify(conversations)
+			);
+			updatedConversations[newMessage.conversation].messages.push(
+				newMessage
+			);
+			setConversations({ ...updatedConversations });
+		});
+
+		socket?.on("newConversation", (newConversation) => {
+			newConversation.shouldShake = true;
+			const sound = new Audio(notificationSound);
+			sound.play();
+
+			setConversations({
+				...conversations,
+				[newConversation._id]: {
+					...newConversation,
+					partner: newConversation.participants.find(
+						(p) =>
+							p._id.toString() !==
+							newConversation.partner._id.toString()
+					),
+				},
+			});
+		});
+
+		return () => {
+			socket?.off("newMessage");
+			socket?.off("newConversation");
+		};
+	}, [socket, conversations, setConversations]);
 
 	return (
 		<>
-			<div className="flex sm:flex-row flex-col items-center justify-between h-[60dvh] w-[80%]">
+			{/* {loading ? (
+				<>
+					<span className="loading loading-infinity w-52 text-primary"></span>
+				</>
+			) : (
+				
+			)} */}
+			<div className="flex sm:flex-row flex-col items-center justify-between h-[80dvh] lg:w-[80%] w-[100%] mt-[4.5rem]">
 				{/* ACTIVE USERS SIDEBAR */}
 				<div
-					className="xl:w-[30%] sm:w-[40%] w-[100%] min-h-[60dvh] 
-                    max-h-[60dvh] flex flex-col items-start justify-start p-8 bg-[#F5F6F6] shadow-messagebox gap-4"
+					className={classNames({
+						"xl:w-[30%] sm:w-[40%] w-[100%] chat-container p-8 bg-[#F5F6F6] shadow-messagebox": true,
+						"flex flex-col items-start justify-start gap-4": true,
+						"sm:flex hidden": selectedIndex,
+					})}
 				>
 					<Sidebar
-						conversations={fakeConversations}
+						conversations={conversations}
 						selectedIndex={selectedIndex}
 						setSelectedIndex={setSelectedIndex}
+						setConversations={setConversations}
 					/>
 				</div>
 
-				{/* CHATBOX MESSAGES */}
-				<div className="2xl:w-[47%] sm:w-[80%] min-h-[60dvh] max-h-[60dvh] flex flex-col items-center justify-center shadow-messagebox">
-					<MessageBox
-						conversation={fakeConversations[selectedIndex]}
-					/>
-				</div>
+				{selectedIndex === null ? (
+					<>
+						<div className="2xl:w-[70%] sm:w-[80%] chat-container sm:flex hidden flex-col items-center justify-center shadow-messagebox">
+							<img className="w-72" src="/logo_2.png" alt="" />
+						</div>
+					</>
+				) : (
+					<>
+						{/* CHATBOX MESSAGES */}
+						<div
+							className={classNames({
+								"2xl:w-[47%] sm:w-[80%] w-[100%] chat-container shadow-messagebox": true,
+								"flex flex-col items-center justify-center": true,
+								hidden: !selectedIndex,
+							})}
+						>
+							<MessageBox
+								conversations={conversations}
+								selectedIndex={selectedIndex}
+								setConversations={setConversations}
+								setSelectedIndex={setSelectedIndex}
+							/>
+						</div>
 
-				{/* USER CONTACT INFORMATION */}
-				<div className="w-[20%] min-h-[60dvh] max-h-[60dvh] 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
-					<ContactInfo
-						conversation={fakeConversations[selectedIndex]}
-					/>
-				</div>
+						{/* USER CONTACT INFORMATION */}
+						<div className="w-[20%] chat-container 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
+							<ContactInfo
+								conversations={conversations}
+								selectedIndex={selectedIndex}
+								setConversations={setConversations}
+							/>
+						</div>
+					</>
+				)}
 			</div>
 		</>
 	);
