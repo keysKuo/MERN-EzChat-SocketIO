@@ -111,6 +111,60 @@ input:-webkit-autofill:active{
   max-height: 80dvh;
 }
 
+.phone-ring {
+  animation: ring 1s infinite ease-in-out;
+}
+
+.fixed-contact::before {
+  content: '';
+  position: absolute;
+  height: 44px;
+  width: 60px;
+  box-shadow: 30px 0 0 0 #202020;
+  pointer-events: none;
+  top: -40px;
+  right: 0px;
+  border-radius: 0 0 50px 0;
+}
+
+.fixed-contact::after {
+  content: '';
+  position: absolute;
+  height: 44px;
+  width: 60px;
+  box-shadow: 30px 0 0 0 #202020;
+  pointer-events: none;
+  bottom: -40px;
+  right: 0px;
+  border-radius: 0 50px 0px 0;
+}
+
+@keyframes ring {
+  0% {
+    transform: rotate(0deg) scale(1) skew(1deg);
+  }
+
+  10% {
+    transform: rotate(-25deg) scale(1) skew(1deg);
+  }
+  20% {
+    transform: rotate(25deg) scale(1) skew(1deg);
+  }
+  30% {
+    transform: rotate(-25deg) scale(1) skew(1deg);
+  }
+  40% {
+    transform: rotate(25deg) scale(1) skew(1deg);
+  }
+  50% {
+    transform: rotate(0deg) scale(1) skew(1deg);
+  }
+  100% {
+    transform: rotate(0deg) scale(1) skew(1deg);
+  }
+}
+
+
 @keyframes shake {
 	10%,
 	90% {
