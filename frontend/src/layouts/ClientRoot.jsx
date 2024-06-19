@@ -6,9 +6,9 @@ import Widgets from "../components/Common/Widgets";
 export default function ClientRoot() {
 	return (
 		<>
-            <Header />
+			<Header />
 			<Widgets />
-			<main className="main p-4 min-h-screen text-zinc-700 font-medium flex items-center justify-center">
+			<main className="main p-4 h-[100lvh] text-zinc-700 font-medium flex items-center justify-center">
 				<Outlet />
 			</main>
 		</>
