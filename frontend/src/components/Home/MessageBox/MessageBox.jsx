@@ -34,7 +34,7 @@ export default function MessageBox({
 		? "online"
 		: "offline";
 	const [visiblePicker, setVisiblePicker] = useState(false);
-
+	const [langMess, setLangMess] = useState([]);
 	// useEffect(() => {
 
 	// }, [conversations, selectedIndex, setConversations, setSelectedIndex])
@@ -42,7 +42,7 @@ export default function MessageBox({
 	// Tự cuộn xuống cuối mỗi khi messages thay đổi
 	useEffect(() => {
 		scrollToBottom();
-	}, [conversations, selectedIndex]);
+	}, [conversations, selectedIndex, langMess]);
 
 	// Hàm cuộn xuống cuối
 	const scrollToBottom = () => {
@@ -66,10 +66,17 @@ export default function MessageBox({
 			return;
 		}
 
+		const myMessage = {
+			type: "right",
+			message: input,
+		};
+		const updatedLangMess = [...langMess];
+		updatedLangMess.push(myMessage);
+		setLangMess([...updatedLangMess]);
+
 		const options = {
-			url:
-				configDev.API_URL +
-				`/messages/send/${conversations[selectedIndex]?.partner?._id}`,
+			url: configDev.API_URL + "/langchain/test",
+			// `/messages/send/${conversations[selectedIndex]?.partner?._id}`,
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -86,11 +93,16 @@ export default function MessageBox({
 		const result = await fetch(options);
 		if (result) {
 			const newMessage = result.metadata;
-			let updatedConversations = JSON.parse(
-				JSON.stringify(conversations)
-			);
-			updatedConversations[selectedIndex].messages.push(newMessage);
-			setConversations({ ...updatedConversations });
+			updatedLangMess.push({
+				type: "left",
+				message: newMessage,
+			});
+			setLangMess([...updatedLangMess]);
+			// let updatedConversations = JSON.parse(
+			// 	JSON.stringify(conversations)
+			// );
+			// updatedConversations[selectedIndex].messages.push(newMessage);
+			// setConversations({ ...updatedConversations });
 		}
 	};
 
@@ -107,7 +119,10 @@ export default function MessageBox({
 					<div className={`avatar ${userStatus}`}>
 						<div className="w-12 rounded-full">
 							<img
-								src={conversations[selectedIndex]?.partner?.avatar}
+								src={
+									conversations[selectedIndex]?.partner
+										?.avatar
+								}
 							/>
 						</div>
 					</div>
@@ -149,7 +164,7 @@ export default function MessageBox({
 				className="chatbox-content overflow-y-scroll overflow-x-hidden w-full flex flex-1 flex-col items-start justify-between 2xl:px-5 px-7 py-2"
 			>
 				<div className="w-full flex flex-col items-start justify-between">
-					{conversations[selectedIndex]?.messages?.map(
+					{/* {conversations[selectedIndex]?.messages?.map(
 						(chat, idx) => {
 							const nextChat =
 								conversations[selectedIndex].messages[idx + 1];
@@ -177,7 +192,18 @@ export default function MessageBox({
 								/>
 							);
 						}
-					)}
+					)} */}
+
+					{langMess?.map((lm, idx) => {
+						return (
+							<Message
+								key={idx}
+								type={lm.type}
+								message={lm.message}
+								createdAt={new Date().toISOString()}
+							/>
+						);
+					})}
 				</div>
 			</div>
 

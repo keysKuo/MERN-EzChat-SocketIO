@@ -1,6 +1,7 @@
 import React from "react";
 import { formatTimestamp } from "../../../ultils";
 import classNames from "classnames";
+import Markdown from "../Markdown";
 
 export default function Message({
 	type = "left",
@@ -26,7 +27,8 @@ export default function Message({
 						wordBreak: "break-word",
 					}}
 				>
-					{message}
+					{/* {message} */}
+					<Markdown content={message} />
 				</div>
 				<div
 					className={classNames({
