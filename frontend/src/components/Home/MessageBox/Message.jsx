@@ -2,10 +2,12 @@ import React from "react";
 import { formatTimestamp } from "../../../ultils";
 import classNames from "classnames";
 import Markdown from "../Markdown";
+import LineChart from "../../Charts/LineChart";
 
 export default function Message({
 	type = "left",
 	message,
+	chartData,
 	createdAt,
 	hiddenTime = false,
 	shouldShake
@@ -13,11 +15,11 @@ export default function Message({
 	return (
 		<>
 			<div
-				className={`message-${type} flex flex-col items-start gap-2 my-2 lg:max-w-[40%] max-w-[54%]`}
+				className={`message-${type} relative items-start gap-2 my-2`}
 			>
 				<div
 					className={classNames({
-						"message rounded-lg px-4 py-2 bg-gray-100": true,
+						"message rounded-lg px-4 py-2 bg-gray-100 w-[100%]": true,
 						"self-end": type === "right",
 						"shake": shouldShake
 					})}
@@ -29,6 +31,11 @@ export default function Message({
 				>
 					{/* {message} */}
 					<Markdown content={message} />
+					
+					{chartData && <>
+						<br />
+						<LineChart data={chartData} />
+					</>}
 				</div>
 				<div
 					className={classNames({

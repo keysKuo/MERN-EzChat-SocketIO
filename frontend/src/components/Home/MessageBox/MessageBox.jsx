@@ -17,6 +17,21 @@ import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import classNames from "classnames";
 
+const chartData = [
+	{ date: new Date(2023, 0, 1), value: 30 },
+	{ date: new Date(2023, 1, 1), value: 40 },
+	{ date: new Date(2023, 2, 1), value: 35 },
+	{ date: new Date(2023, 3, 1), value: 50 },
+	{ date: new Date(2023, 4, 1), value: 55 },
+	{ date: new Date(2023, 5, 1), value: 80 },
+	{ date: new Date(2023, 6, 1), value: 160 },
+	{ date: new Date(2023, 7, 1), value: 20 },
+	{ date: new Date(2023, 8, 1), value: 90 },
+	{ date: new Date(2023, 9, 1), value: 120 },
+	{ date: new Date(2023, 10, 1), value: 50 },
+  ];
+
+
 export default function MessageBox({
 	conversations,
 	selectedIndex,
@@ -96,6 +111,7 @@ export default function MessageBox({
 			updatedLangMess.push({
 				type: "left",
 				message: newMessage,
+				chartData: chartData
 			});
 			setLangMess([...updatedLangMess]);
 			// let updatedConversations = JSON.parse(
@@ -201,6 +217,7 @@ export default function MessageBox({
 								type={lm.type}
 								message={lm.message}
 								createdAt={new Date().toISOString()}
+								chartData={lm.chartData}
 							/>
 						);
 					})}

@@ -122,7 +122,7 @@ export default function HomePage() {
 						{/* CHATBOX MESSAGES */}
 						<div
 							className={classNames({
-								"2xl:w-[47%] sm:w-[80%] w-[100%] chat-container shadow-messagebox": true,
+								"2xl:w-[80%] sm:w-[80%] w-[100%] chat-container shadow-messagebox": true,
 								"flex flex-col items-center justify-center": true,
 								hidden: !selectedIndex,
 							})}
@@ -136,13 +136,13 @@ export default function HomePage() {
 						</div>
 
 						{/* USER CONTACT INFORMATION */}
-						<div className="w-[20%] chat-container 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
+						{/* <div className="w-[20%] chat-container 2xl:flex hidden flex-col items-center justify-start p-6 bg-[#F8F9FA] shadow-messagebox">
 							<ContactInfo
 								conversations={conversations}
 								selectedIndex={selectedIndex}
 								setConversations={setConversations}
 							/>
-						</div>
+						</div> */}
 					</>
 				)}
 			</div>
