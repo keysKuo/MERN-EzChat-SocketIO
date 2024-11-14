@@ -1,5 +1,5 @@
 <h3 align="center">
-    <img width="280" alt="..." src="drontend/public/logo.png" >
+    <img width="280" alt="..." src="frontend/public/logo.png" >
 </h3>
 
 
