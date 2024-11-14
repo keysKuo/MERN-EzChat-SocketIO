@@ -1,4 +1,20 @@
+<div align="center">
+  <a href="https://postwoman.io"><img src="https://www.newai.vn/static/img/logo.png" alt="newai.vn logo" height="160">
+  </a>
+  <br/>
+  <br/>
 
+  [![GitHub release](https://img.shields.io/github/release/liyasthomas/postwoman/all?logo=GitHub)](https://github.com/keysKuo/Llama3-sql-optimization.git) [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://ezticket.io.vn) [![Chat on Discord](https://img.shields.io/badge/chat-Discord-71b190?logo=discord)](https://discord.gg/Z4ZxSRF6) [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+
+
+  </p>
+  <p>
+    <sub>Built with ✏️ by
+      <a href="https://github.com/keysKuo">nkeysKuo</a> and
+      <a href="https://github.com/keysKuo">NewAI teams</a>
+    </sub>
+  </p>
+</div>
 
 <h3 align="center"><img width="700" style="border-radius:5px;" alt="screenshot" src="frontend/public/demo.jpg"></h3>
 
