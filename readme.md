@@ -7,7 +7,7 @@
     <a href="https://ezticket.io.vn/"><strong>« LIVE DEMO »</strong></a>
 </p>
 
-<h3 align="center"><img width="700" style="border-radius:5px;" alt="screenshot" src="https://ezticket.io.vn/demo.jpg"></h3>
+<h3 align="center"><img width="700" style="border-radius:5px;" alt="screenshot" src="frontend/public/demo.jpg"></h3>
 
 <br/>
 
